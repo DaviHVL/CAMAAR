@@ -1,0 +1,21 @@
+<div class="p-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    
+    <% if @turmas.any? %>
+      <% @turmas.each do |turma| %>
+        <%= render(EvaluationCardComponent.new(
+              turma: turma.numero,
+              materia: turma.materia.nome,
+              professor: turma.professor&.nome,
+              semestre: turma.semestre
+            )) %>
+      <% end %>
+    <% else %>
+      <div class="col-span-3 text-center text-gray-500 mt-10">
+        <p>Você não está matriculado em nenhuma turma ainda.</p>
+        <p class="text-sm">Importe os dados do SIGAA para visualizar as matérias.</p>
+      </div>
+    <% end %>
+
+  </div>
+</div>

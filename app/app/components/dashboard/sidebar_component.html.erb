@@ -1,0 +1,27 @@
+<aside data-sidebar-target="menu" class="w-64 bg-white border-r border-gray-200 flex flex-col h-full transition-all duration-300 ease-in-out">
+
+  <%# --- LÓGICA DE ESTADO ATIVO --- %>
+  <%# O link "Avaliações" está ativo se a rota for a raiz (root) ou o /dashboard %>
+  <% is_avaliacoes_active = current_page?(root_path) || current_page?(dashboard_path) %>
+  <% is_gerenciamento_active = current_page?(admin_path) %>
+
+  <% classes_ativos = 'bg-[#7A2B7A] text-white border-l-4 border-[#5B1A5B]' %>
+  <% classes_inativos = 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' %>
+
+  <% classes_avaliacoes = is_avaliacoes_active ? classes_ativos : classes_inativos %>
+  <% classes_gerenciamento = is_gerenciamento_active ? classes_ativos : classes_inativos %>
+  <%# -------------------------------- %>
+
+  <%# 1. Link Avaliações (Agora dinâmico) %>
+  <a href="<%= dashboard_path %>" class="flex items-center px-6 py-4 transition-colors <%= classes_avaliacoes %>">
+    <span class="font-medium">Avaliações</span>
+  </a>
+
+  <%# 2. Link Gerenciamento (Agora usa o helper de classes) %>
+  <% if admin? %>
+    <a href="<%= admin_path %>" class="flex items-center px-6 py-4 transition-colors <%= classes_gerenciamento %>">
+      <span class="font-medium">Gerenciamento</span>
+    </a>
+  <% end %>
+
+</aside>
