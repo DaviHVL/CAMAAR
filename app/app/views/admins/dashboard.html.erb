@@ -8,11 +8,11 @@
                 <%= render(ButtonComponent.new(text: "Importar dados", variant: :primary, type: :button)) %>
             <% end %>
 
-            <%= link_to "#" do %>
+            <%= link_to admin_edit_templates_path do %>
                 <%= render(ButtonComponent.new(text: "Editar Templates", variant: :secondary, type: :button)) %>
             <% end %>
             
-            <%= link_to "#" do %>
+            <%= link_to admin_send_forms_path do %>
                 <%= render(ButtonComponent.new(text: "Enviar Formulários", variant: :secondary, type: :button)) %>
             <% end %>
 
