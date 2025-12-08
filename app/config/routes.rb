@@ -15,8 +15,13 @@ Rails.application.routes.draw do
   # Rotas de Envio de Formulários
   get 'admin/send_forms', to: 'admins#send_forms', as: 'admin_send_forms'
 
-  # AQUI: Nova rota para Gerenciar Templates
+  # Rotas de Gerenciamento de Templates
   get 'admin/templates', to: 'admins#edit_templates', as: 'admin_edit_templates'
+  get 'admin/templates/new', to: 'admins#new_template', as: 'admin_new_template'
+  
+  # CORREÇÃO: Ativamos a rota POST. O helper gerado por essa linha é admin_templates_path,
+  # que o form_with espera para a criação (action: create).
+  post 'admin/templates', to: 'admins#create_template', as: 'admin_templates' 
 
   root to: 'dashboard#index'
 end

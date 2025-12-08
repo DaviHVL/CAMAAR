@@ -5,15 +5,25 @@
   </div>
 
   <div class="w-full max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-xl">
+    
+    <%# Exibe a mensagem flash (notice ou alert) %>
+    <% if notice %>
+      <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert"><p class="font-bold">Sucesso!</p><p><%= notice %></p></div>
+    <% elsif flash[:alert] %>
+      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert"><p class="font-bold">Erro!</p><p><%= flash[:alert] %></p></div>
+    <% end %>
+    
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       
-      <%# LOOP FUTURO: Se @templates estiver vazio, nada aqui será renderizado %>
+      <%# LOOP sobre Templates do banco de dados %>
       <% @templates.each do |template| %>
-        <div class="bg-gray-100 p-4 rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-32 hover:shadow-lg transition duration-200">
+        <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-32 hover:shadow-lg transition duration-200">
           <div class="flex justify-between items-start">
             <div>
-              <h2 class="text-lg font-semibold text-gray-800"><%= template.name %></h2>
-              <p class="text-sm text-gray-500"><%= template.description %></p>
+              <%# Acessando o atributo diretamente %>
+              <h2 class="text-lg font-semibold text-gray-800"><%= template.nome %></h2> 
+              <%# Mock de descrição: no futuro, substitua por template.description %>
+              <p class="text-sm text-gray-500">Semestre e Código</p> 
             </div>
             <div class="flex space-x-2 text-gray-500">
               <span title="Editar" class="cursor-pointer hover:text-purple-600">
@@ -24,11 +34,13 @@
               </span>
             </div>
           </div>
+          <%# Mock de código/semestre %>
+          <p class="text-xs text-gray-400">Criado em: <%= template.created_at.strftime("%d/%m/%Y") %></p>
         </div>
       <% end %>
       
       <div class="bg-gray-50 p-4 rounded-lg border border-gray-300 flex items-center justify-center h-32 cursor-pointer hover:bg-gray-100 hover:shadow-md transition duration-200">
-        <%= link_to "#", class: "w-full h-full flex items-center justify-center" do %>
+        <%= link_to admin_new_template_path, class: "w-full h-full flex items-center justify-center" do %>
           <span class="text-5xl font-light text-gray-400">+</span>
         <% end %>
       </div>
