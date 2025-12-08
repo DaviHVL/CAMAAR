@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
 
+  get 'cadastro', to: 'users#new', as: 'cadastro'
+  post 'cadastro', to: 'users#create'
+
   get 'dashboard', to: 'dashboard#index'
 
   get 'admin', to: 'admins#dashboard', as: 'admin' 
