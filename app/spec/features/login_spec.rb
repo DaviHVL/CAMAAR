@@ -13,7 +13,8 @@ RSpec.describe "Autenticação", type: :system do
       nome: "Aluno Teste",
       email: "aluno@unb.br", 
       password: "password123",
-      matricula: "231013529"
+      matricula: "231013529",
+      ocupacao: "discente"
     )
 
     # 2. AGIR (Simula o navegador)
