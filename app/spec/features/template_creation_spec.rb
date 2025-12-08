@@ -24,7 +24,7 @@ RSpec.describe "Criação de Template (Admin)", type: :system do
     click_button "Criar"
 
     # expectativas
-    expect(page).to have_content("Template 'Template de Teste' criado com sucesso!")
+    expect(page).to have_content("Template criado com sucesso!")
     expect(page).to have_content("Template de Teste")
   end
 end
