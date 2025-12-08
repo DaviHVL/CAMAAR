@@ -72,3 +72,5 @@ group :development, :test do
 end
 
 gem "view_component", "~> 4.1"
+
+gem "letter_opener", group: :development

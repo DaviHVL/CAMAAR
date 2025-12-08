@@ -11,4 +11,14 @@ class Usuario < ApplicationRecord
 
   has_many :formulario_respondidos
   has_many :templates
+
+  def generate_password_reset_token!
+    token = SecureRandom.urlsafe_base64
+    update_columns(reset_digest: BCrypt::Password.create(token), reset_sent_at: Time.zone.now)
+    token 
+  end
+
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
 end

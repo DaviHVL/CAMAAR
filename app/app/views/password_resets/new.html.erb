@@ -1,0 +1,49 @@
+<div class="min-h-screen bg-gray-200 flex items-center justify-center p-4">
+  
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl flex flex-col md:flex-row h-[500px] overflow-hidden">
+    
+    <div class="w-full md:w-[55%] p-12 flex flex-col justify-center">
+      
+      <h2 class="text-2xl font-normal text-center text-gray-800 mb-2 tracking-[0.2em]">RECUPERAR</h2>
+      <h2 class="text-xl font-normal text-center text-gray-600 mb-10 tracking-[0.1em]">SENHA</h2>
+
+      <% if flash[:alert] %>
+        <div class="bg-red-50 text-red-600 text-sm px-4 py-2 rounded mb-6 text-center border border-red-200">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <%= form_with url: password_resets_path, local: true, class: "space-y-6" do |form| %>
+        
+        <p class="text-sm text-gray-600 text-center mb-4">
+          Digite seu email para receber o link de redefinição.
+        </p>
+
+        <%= render(FormInputComponent.new(
+              label: "Email",
+              name: "email",
+              type: :email,
+              placeholder: "aluno@aluno.unb.br"
+            )) %>
+
+        <div class="pt-2">
+          <%= render(ButtonComponent.new(
+                text: "Enviar Email",
+                type: :submit,
+                variant: :primary
+              )) %>
+        </div>
+
+        <div class="text-center mt-4">
+          <%= link_to "Voltar para Login", login_path, class: "text-sm text-purple-700 hover:text-purple-900 font-semibold" %>
+        </div>
+
+      <% end %>
+    </div>
+
+    <div class="hidden md:block md:w-[45%] h-full">
+      <%= render(BrandPanelComponent.new) %>
+    </div>
+
+  </div>
+</div>

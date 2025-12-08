@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :password, only: [:edit, :update]
+
   root to: 'dashboard#index'
 
   resources :formularios, only: [:show] do
@@ -35,4 +37,6 @@ Rails.application.routes.draw do
       post :responder
     end
   end
+
+  resources :password_resets, only: [:new, :create, :edit, :update]
 end
