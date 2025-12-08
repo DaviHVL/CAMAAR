@@ -78,10 +78,11 @@ puts "🔗 Vinculando usuários às turmas..."
 UsuarioTurma.create!(usuario: prof, turma: turma_bd)
 UsuarioTurma.create!(usuario: prof, turma: turma_es)
 
-# Alunos nas turmas (misturado)
+# Alunos nas turmas
 alunos.each_with_index do |aluno, index|
   UsuarioTurma.create!(usuario: aluno, turma: turma_bd)
-  UsuarioTurma.create!(usuario: aluno, turma: turma_es) if index.even? # Só alguns em ES
+  # Matricula em ES apenas se o índice for par (para variar)
+  UsuarioTurma.create!(usuario: aluno, turma: turma_es) if index.even? 
 end
 
 # 5. Templates e Formulários
@@ -90,33 +91,45 @@ puts "📝 Criando templates e formulários..."
 # Template
 template = Template.create!(nome: "Avaliação Padrão CIC", usuario: admin)
 
-# Questão de Texto
-q1 = QuestaoTemplate.create!(
+# Questão de Texto no Template
+q1_temp = QuestaoTemplate.create!(
   texto_questao: "O que você achou da didática do professor?",
   tipo_resposta: "texto",
   template: template
 )
 
-# Questão de Múltipla Escolha
-q2 = QuestaoTemplate.create!(
+# Questão de Múltipla Escolha no Template
+q2_temp = QuestaoTemplate.create!(
   texto_questao: "Como você avalia a infraestrutura da sala?",
   tipo_resposta: "multipla_escolha",
   template: template
 )
-OpcaoTemplate.create!(texto_opcao: "Ruim", numero_opcao: 1, questao_template: q2)
-OpcaoTemplate.create!(texto_opcao: "Regular", numero_opcao: 2, questao_template: q2)
-OpcaoTemplate.create!(texto_opcao: "Boa", numero_opcao: 3, questao_template: q2)
+OpcaoTemplate.create!(texto_opcao: "Ruim", numero_opcao: 1, questao_template: q2_temp)
+OpcaoTemplate.create!(texto_opcao: "Regular", numero_opcao: 2, questao_template: q2_temp)
+OpcaoTemplate.create!(texto_opcao: "Boa", numero_opcao: 3, questao_template: q2_temp)
 
 # Criar um Formulário Aplicado (Cópia do Template para a Turma de BD)
+# Isso simula o processo de "Aplicar Template"
 form = Formulario.create!(titulo: "Avaliação Final - Bancos de Dados", so_alunos: true)
 FormularioTurma.create!(formulario: form, turma: turma_bd)
 
-# Copiar questões do template para o formulário (simulando a lógica real)
-QuestaoFormulario.create!(texto_questao: q1.texto_questao, tipo_resposta: q1.tipo_resposta, formulario: form)
-q_form_2 = QuestaoFormulario.create!(texto_questao: q2.texto_questao, tipo_resposta: q2.tipo_resposta, formulario: form)
-OpcaoFormulario.create!(texto_opcao: "Ruim", numero_opcao: 1, questao_formulario: q_form_2)
-OpcaoFormulario.create!(texto_opcao: "Regular", numero_opcao: 2, questao_formulario: q_form_2)
-OpcaoFormulario.create!(texto_opcao: "Boa", numero_opcao: 3, questao_formulario: q_form_2)
+# Copiar questões do template para o formulário
+QuestaoFormulario.create!(
+  texto_questao: q1_temp.texto_questao,
+  tipo_resposta: q1_temp.tipo_resposta,
+  formulario: form
+)
+
+q2_form = QuestaoFormulario.create!(
+  texto_questao: q2_temp.texto_questao,
+  tipo_resposta: q2_temp.tipo_resposta,
+  formulario: form
+)
+
+# Copiar opções da questão múltipla escolha
+OpcaoFormulario.create!(texto_opcao: "Ruim", numero_opcao: 1, questao_formulario: q2_form)
+OpcaoFormulario.create!(texto_opcao: "Regular", numero_opcao: 2, questao_formulario: q2_form)
+OpcaoFormulario.create!(texto_opcao: "Boa", numero_opcao: 3, questao_formulario: q2_form)
 
 puts "✅ Seed concluído com sucesso!"
 puts "--------------------------------------------------"

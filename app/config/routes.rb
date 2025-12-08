@@ -19,4 +19,10 @@ Rails.application.routes.draw do
   get 'admin/templates', to: 'admins#edit_templates', as: 'admin_edit_templates'
 
   root to: 'dashboard#index'
+
+  resources :formularios, only: [:show] do
+    member do
+      post :responder
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_07_190733) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_08_022025) do
   create_table "departamentos", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "nome"
@@ -81,7 +81,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_07_190733) do
   create_table "questao_respondidas", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "formulario_respondido_id", null: false
-    t.integer "opcao_formulario_id", null: false
+    t.integer "opcao_formulario_id"
     t.integer "questao_formulario_id", null: false
     t.text "resposta"
     t.datetime "updated_at", null: false
