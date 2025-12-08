@@ -7,7 +7,7 @@ class ButtonComponent < ViewComponent::Base
   end
 
   def classes
-    base = "w-full py-3 px-6 rounded font-bold text-sm focus:outline-none transition duration-150 shadow-md cursor-pointer"
+    base = "w-full inline-block py-3 px-6 rounded font-bold text-sm text-center focus:outline-none transition duration-150 shadow-md cursor-pointer"
     
     case @variant
     when :primary

@@ -4,12 +4,34 @@ class AdminsController < ApplicationController
   before_action :set_template, only: [:edit_template, :update_template, :destroy_template]
   skip_before_action :require_login, only: [:create_template]
 
+  # --- Menu Principal ---
   def dashboard
   end
 
+  # --- Funcionalidade de Importação ---
   def import_form
   end
 
+  # ADICIONADO: O método que processa o upload
+  def importar
+    arquivo_turmas = params[:arquivo_turmas]
+    arquivo_membros = params[:arquivo_membros]
+
+    if arquivo_turmas.present? && arquivo_membros.present?
+      # Caminho temporário dos arquivos enviados
+      path_turmas = arquivo_turmas.path
+      path_membros = arquivo_membros.path
+
+      # Chama o serviço para processar
+      SigaaService.new(path_turmas, path_membros).call
+
+      redirect_to admin_path, notice: "Importação realizada com sucesso!"
+    else
+      redirect_to admin_importar_form_path, alert: "Por favor, anexe os dois arquivos JSON."
+    end
+  end
+
+  # --- Funcionalidade de Enviar Formulários ---
   def send_forms
     # Lógica para carregar dados (formulários, templates)
     @forms_to_send = [ 
@@ -18,13 +40,12 @@ class AdminsController < ApplicationController
     ]
   end
 
+  # --- Funcionalidade de Templates (Manual) ---
   def edit_templates
-    # Busca todos os templates criados no banco de dados
     @templates = Template.all.order(created_at: :desc)
   end
 
   def new_template
-    # Inicializa um novo objeto Template vazio
     @template = Template.new
     questao = @template.questao_templates.build
     # Adiciona pelo menos um bloco de Questão vazio para iniciar o formulário
