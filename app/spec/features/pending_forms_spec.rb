@@ -9,9 +9,10 @@ RSpec.describe "Formulários Pendentes no Dashboard", type: :system do
     # Criar usuário estudante
     usuario = Usuario.create!(nome: "Aluno Pendente", email: "pendente@unb.br", password: "senha123", matricula: "9999", ocupacao: "discente")
 
-    # Criar matéria
-    materia1 = Materium.create!(nome: "Banco de Dados")
-    materia2 = Materium.create!(nome: "Algoritmos")
+    # Criar departamento e matérias
+    departamento = Departamento.create!(nome: "Departamento Teste")
+    materia1 = Materia.create!(nome: "Banco de Dados", departamento: departamento)
+    materia2 = Materia.create!(nome: "Algoritmos", departamento: departamento)
 
     # Criar duas turmas e associá-las ao usuário
     turma1 = Turma.create!(num_turma: "T1", materia: materia1, semestre: "2025.2")
@@ -41,7 +42,8 @@ RSpec.describe "Formulários Pendentes no Dashboard", type: :system do
 
     # Deve mostrar a turma1 (Banco de Dados) com o badge 'Responder'
     expect(page).to have_content("Banco de Dados")
-    within(:xpath, "//h3[text()='Banco de Dados']/ancestor::div[contains(@class,'block')]") do
+    # O cartão pode ser um <a> ou <div>, então buscamos o ancestral genérico com a classe 'block'
+    within(:xpath, "//h3[text()='Banco de Dados']/ancestor::*[contains(@class,'block')]") do
       expect(page).to have_text("Responder")
     end
 

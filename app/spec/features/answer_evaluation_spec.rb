@@ -10,7 +10,8 @@ RSpec.describe "Responder Avaliação", type: :system do
     usuario = Usuario.create!(nome: "Aluno", email: "aluno2@unb.br", password: "senha123", matricula: "0001", ocupacao: "discente")
 
     # Criar turma e formulário com questões
-    materia = Materia.create!(nome: "Matéria Teste")
+    departamento = Departamento.create!(nome: "Departamento Teste")
+    materia = Materia.create!(nome: "Matéria Teste", departamento: departamento)
     turma = Turma.create!(num_turma: "T1", materia: materia, semestre: "2025.2")
     
     # Associar usuário à turma

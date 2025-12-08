@@ -13,6 +13,7 @@ RSpec.describe "Cadastro de Usuário", type: :system do
     fill_in "Matrícula", with: "123456"
     fill_in "Senha", with: "minhasenha"
     fill_in "Confirme a Senha", with: "minhasenha"
+    select "discente", from: "Ocupação"
 
     click_button "Cadastrar"
 
@@ -29,6 +30,7 @@ RSpec.describe "Cadastro de Usuário", type: :system do
     fill_in "Matrícula", with: ""
     fill_in "Senha", with: "123"
     fill_in "Confirme a Senha", with: "456"
+    select "discente", from: "Ocupação"
 
     click_button "Cadastrar"
 
