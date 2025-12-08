@@ -33,11 +33,10 @@ class AdminsController < ApplicationController
 
   # --- Funcionalidade de Enviar Formulários ---
   def send_forms
-    # Lógica para carregar dados (formulários, templates)
-    @forms_to_send = [ 
-      { name: "Estudos Em", semester: "2024.1", code: "CIC1024", checked: true }, 
-      # ...
-    ]
+    @turmas = Turma.all
+
+    @templates = Template.where(usuario_id: current_user.id)
+                          .order(:nome)
   end
 
   # --- Funcionalidade de Templates (Manual) ---
@@ -135,6 +134,28 @@ class AdminsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+
+  def process_send_forms
+    template_id = params[:template_id]
+    turma_ids = params[:turma_ids]
+
+    if template_id.blank? || turma_ids.blank?
+      redirect_to admin_send_forms_path, alert: "Selecione um template e pelo menos uma turma."
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      turma_ids.each do |tid|
+        FormularioTurma.create!(
+          formulario_id: template_id,
+          turma_id: tid,
+        )
+      end
+    end
+
+    redirect_to admin_send_forms_path, notice: "Formulários enviados com sucesso!"
   end
 
   private
