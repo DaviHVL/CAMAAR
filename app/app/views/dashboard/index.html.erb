@@ -4,7 +4,7 @@
     <% if @turmas.any? %>
       <% @turmas.each do |turma| %>
         <%= render(EvaluationCardComponent.new(
-              turma: turma.numero,
+              turma: turma.num_turma,
               materia: turma.materia.nome,
               professor: turma.professor&.nome,
               semestre: turma.semestre
