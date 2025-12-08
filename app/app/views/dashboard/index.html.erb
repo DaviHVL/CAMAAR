@@ -1,0 +1,33 @@
+<div class="p-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    
+    <% if @turmas.any? %>
+      <% @turmas.each do |turma| %>
+        
+        <% formulario = turma.formularios.first %>
+        
+        <%# --- LÓGICA DE FILTRAGEM (ALTERADA) --- %>
+        
+        <%# 1. Se a turma NÃO tem formulário criado pelo admin, pula e não mostra nada. %>
+        <% next unless formulario %>
+
+        <%# 2. Se o aluno JÁ respondeu este formulário, pula também. %>
+        <% next if @ids_respondidos.include?(formulario.id) %>
+        
+        <%# ------------------------------------- %>
+        
+        <%= render(EvaluationCardComponent.new(
+              turma: turma.num_turma,
+              materia: turma.materia.nome,
+              professor: turma.professor,
+              semestre: turma.semestre,
+              formulario_id: formulario.id,
+              turma_id: turma.id
+            )) %>
+            
+      <% end %>
+    <% else %>
+      <% end %>
+
+  </div>
+</div>

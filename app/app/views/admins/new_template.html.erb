@@ -1,0 +1,105 @@
+<div class="min-h-full flex items-center justify-center p-4 bg-gray-100">
+  
+  <%# Adicionado classe container para o JavaScript %>
+  <%= form_with model: @template, url: admin_templates_path, local: true, html: { class: 'template-form-container' } do |form| %>
+  
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-xl">
+      
+      <div class="p-8">
+        <%# Exibe erros de validação %>
+        <% if @template.errors.any? %>
+          <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+            <ul>
+              <% @template.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="mb-6 border-b border-gray-200 pb-4">
+          <label class="block text-sm font-medium text-gray-700">Nome do template:</label>
+          <%= form.text_field :nome, required: true, placeholder: "Placeholder", class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1" %>
+        </div>
+
+        <%# Classe de identificação do Bloco %>
+        <div class="mb-6 border-b border-gray-200 pb-4 js-question-block">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">Questão 1</h2>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Tipo:</label>
+              <%# Classe para o JS controlar a visibilidade das opções %>
+              <select class="mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1 js-type-select">
+                <option value="Radio">Radio</option>
+                <option value="Texto">Texto</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Texto:</label>
+              <input type="text" placeholder="Placeholder" class="mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1">
+            </div>
+          </div>
+          
+          <%# Container de Opções: Visível por padrão se for Radio %>
+          <div class="mt-4 js-options-container">
+            <label class="block text-sm font-medium text-gray-700">Opções:</label>
+            <div class="js-options-list">
+                <input type="text" placeholder="Placeholder" class="mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1">
+            </div>
+          </div>
+          
+          <div class="mt-4 flex justify-center js-add-option-button">
+            <button type="button" class="h-8 w-8 rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400 flex items-center justify-center js-add-option">
+              <span class="text-xl font-light">+</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="mb-6 border-b border-gray-200 pb-4 js-question-block">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">Questão 2</h2>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Tipo:</label>
+              <select class="mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1 js-type-select">
+                <option value="Texto">Texto</option>
+                <option value="Radio">Radio</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Texto:</label>
+              <input type="text" placeholder="Placeholder" class="mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1">
+            </div>
+          </div>
+          
+          <%# Container de Opções: Escondido por padrão se for Texto %>
+          <div class="mt-4 js-options-container hidden">
+            <label class="block text-sm font-medium text-gray-700">Opções:</label>
+            <div class="js-options-list">
+                <input type="text" placeholder="Placeholder" class="mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1">
+            </div>
+          </div>
+          
+          <div class="mt-4 flex justify-center js-add-option-button hidden">
+            <button type="button" class="h-8 w-8 rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400 flex items-center justify-center js-add-option">
+              <span class="text-xl font-light">+</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex justify-center js-main-add-button-container">
+          <button type="button" class="h-10 w-10 rounded-full bg-purple-600 text-white hover:bg-purple-700 flex items-center justify-center shadow-md js-add-question">
+            <span class="text-2xl font-light">+</span>
+          </button>
+        </div>
+        
+      </div>
+      
+      <div class="p-4 bg-gray-50 flex justify-center rounded-b-lg">
+        <%= render(ButtonComponent.new(text: "Criar", variant: :success, type: :submit)) %>
+      </div>
+      
+    </div>
+  <% end %>
+</div>
