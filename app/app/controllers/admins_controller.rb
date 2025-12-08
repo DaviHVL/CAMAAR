@@ -51,46 +51,16 @@ class AdminsController < ApplicationController
     questao.opcao_templates.build
   end
 
-
-    # app/controllers/admins_controller.rb
-
   def create_template
+    @template = Template.new(template_params)
+    @template.usuario = current_user 
 
-    attrs = params.require(:template).permit(
-      :nome,
-      questao_templates_attributes: [
-        :tipo,
-        :texto,
-        options_attributes: [:texto]
-      ]
-    )
-
-    template = Template.create!(
-      nome: attrs[:nome],
-      usuario_id: current_user.id
-    )
-
-    if attrs[:questao_templates_attributes]
-      attrs[:questao_templates_attributes].each do |_, q|
-        questao = QuestaoTemplate.create!(
-          template_id: template.id,
-          tipo_resposta: q[:tipo],       # renomeando automaticamente
-          texto_questao: q[:texto]
-        )
-
-        if q[:options_attributes]
-          q[:options_attributes].each do |idx, op|
-            OpcaoTemplate.create!(
-              questao_template_id: questao.id,
-              texto_opcao: op[:texto],
-              numero_opcao: idx.to_i + 1
-            )
-          end
-        end
-      end
+    if @template.save 
+      redirect_to admin_edit_templates_path, notice: "Template criado com sucesso!"
+    else
+    flash.now[:alert] = "Erro ao criar template. Verifique os campos."
+    render :new_template, status: :unprocessable_entity 
     end
-    redirect_to admin_edit_templates_path, notice: "Template criado com sucesso!"
-
   end
 
 
@@ -106,13 +76,11 @@ class AdminsController < ApplicationController
   end
 
   def edit_template
-    # @template já vem do set_template (com questao_templates e opcao_templates carregados)
-    Rails.logger.info "EDIT_TEMPLATE: template id=#{@template.id} - questoes_count=#{@template.questao_templates.size}"
-    @template.questao_templates.each do |q|
-      Rails.logger.info "  questao id=#{q.id} texto='#{q.texto_questao}' options_count=#{q.opcao_templates.size}"
+    if @template.questao_templates.empty?
+      @template.questao_templates.build
     end
 
-    render 'update_template'
+    render 'update_template' 
   end
 
   def update_template

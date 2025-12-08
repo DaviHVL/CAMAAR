@@ -1,9 +1,9 @@
 <div class="min-h-full flex items-center justify-center p-4 bg-gray-100">
   
   <%# O Rails inferirá o método PATCH e a URL com o ID, e carregará os dados %>
-  <%= form_with(model: @template,url: admin_template_update_path(@template),method: :patch,local: true,html: { class: "template-form-container" }) do |form| %>
+  <%= form_with(model: @template,url: admin_template_update_path(@template),method: :patch,local: true,html: { class: "template-form-container w-full max-w-xl" }) do |form| %>
   
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-xl">
+    <div class="bg-white rounded-lg shadow-xl w-full">
       
       <div class="p-8">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Editar Template: <%= @template.nome %></h1>
@@ -26,8 +26,9 @@
 
         <div id="questions-container">
           
-          <%# fields_for para a associação has_many :questao_templates %>
-          <% form.fields_for :questao_templates, @template.questao_templates do |q_form| %>
+          <%# LOOP PRINCIPAL: fields_for para a associação has_many :questao_templates %>
+          <%# OMITIMOS o segundo parâmetro para iterar sobre TUDO que está em @template.questao_templates %>
+          <%= form.fields_for :questao_templates do |q_form| %>
             
             <div class="mb-6 border-b border-gray-200 pb-4 js-question-block">
               <h2 class="text-xl font-bold text-gray-800 mb-4">Questão Existente</h2>
@@ -40,9 +41,9 @@
                   <label class="block text-sm font-medium text-gray-700">Tipo:</label>
                   <%# Campo tipo_resposta %>
                   <%= q_form.select :tipo_resposta, 
-                                     [['Radio', 'Radio'], ['Texto', 'Texto']], 
-                                     { selected: q_form.object.tipo_resposta },
-                                     { class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1 js-type-select" } %>
+                                    [['Radio', 'Radio'], ['Texto', 'Texto']], 
+                                    { selected: q_form.object.tipo_resposta },
+                                    { class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1 js-type-select" } %>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700">Texto:</label>
@@ -56,11 +57,15 @@
                 <label class="block text-sm font-medium text-gray-700">Opções:</label>
                 <div class="js-options-list">
                     
-                    <%# fields_for para a associação has_many :opcao_templates %>
-                    <% q_form.fields_for :opcao_templates, q_form.object.opcao_templates do |o_form| %>
+                    <%# CORREÇÃO CRÍTICA: Iterar sobre as opções DENTRO do objeto da Questão %>
+                    <% q_form.fields_for :opcao_templates do |o_form| %>
                         
                         <div class="flex items-center space-x-2 mt-1 js-option-item">
                             <%= o_form.hidden_field :id %>
+                            
+                            <%# Incluindo o campo obrigatório numero_opcao (como hidden) %>
+                            <%= o_form.hidden_field :numero_opcao, value: o_form.object.numero_opcao || 1 %>
+                            
                             <%# Campo texto_opcao %>
                             <%= o_form.text_field :texto_opcao, placeholder: "Opção Salva", class: "block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1" %>
                             
@@ -71,7 +76,7 @@
                             <button type="button" class="text-red-500 hover:text-red-700 text-sm js-remove-option-btn">X</button>
                         </div>
                         
-                    <% end %>
+                    <% end %> <%# Fim do loop de Opções %>
                 </div>
               </div>
               
@@ -88,7 +93,7 @@
 
             </div>
             
-          <% end %>
+          <% end %> <%# Fim do loop de Questões %>
         </div>
         
         <div class="mt-6 flex justify-center js-main-add-button-container">
@@ -108,9 +113,8 @@
 </div>
 
 
-<%# 1. Template para uma Nova Questão (Clonado pelo botão roxo) %>
+<%# --- TEMPLATES JS: Não precisam de alteração, mas foram incluídos para referência --- %>
 <template id="new-question-template">
-  <%# NEW_RECORD é o placeholder que o JS substituirá pelo timestamp %>
   <%= fields_for :template, @template, child_index: 'NEW_RECORD' do |form_builder| %>
     <%= form_builder.fields_for :questao_templates, QuestaoTemplate.new, child_index: 'NEW_RECORD' do |q_form| %>
       
@@ -121,9 +125,9 @@
           <div>
             <label class="block text-sm font-medium text-gray-700">Tipo:</label>
             <%= q_form.select :tipo_resposta, 
-                               [['Radio', 'Radio'], ['Texto', 'Texto']], 
-                               { selected: 'Radio' },
-                               { class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1 js-type-select" } %>
+                                [['Radio', 'Radio'], ['Texto', 'Texto']], 
+                                { selected: 'Radio' },
+                                { class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1 js-type-select" } %>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Texto:</label>
@@ -134,7 +138,6 @@
         <div class="mt-4 js-options-container">
           <label class="block text-sm font-medium text-gray-700">Opções:</label>
           <div class="js-options-list">
-            <%# A primeira opção inicial será adicionada pelo template de opção aninhado %>
           </div>
         </div>
         
@@ -154,9 +157,7 @@
   <% end %>
 </template>
 
-<%# 2. Template para uma Nova Opção (Usado pelo botão cinza) %>
 <template id="new-option-template">
-  <%# 'QUESTION_INDEX' e 'NEW_OPTION_RECORD' são placeholders para o JS %>
   <div class="flex items-center space-x-2 mt-1 js-option-item">
     <input type="text" placeholder="Nova Opção" 
            name="template[questao_templates_attributes][QUESTION_INDEX][opcao_templates_attributes][NEW_OPTION_RECORD][texto_opcao]" 
