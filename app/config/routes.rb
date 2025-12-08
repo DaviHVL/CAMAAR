@@ -23,5 +23,7 @@ Rails.application.routes.draw do
   # que o form_with espera para a criação (action: create).
   post 'admin/templates', to: 'admins#create_template', as: 'admin_templates' 
 
+  delete 'admin/templates/:id', to: 'admins#destroy_template', as: 'admin_template_delete'
+
   root to: 'dashboard#index'
 end
