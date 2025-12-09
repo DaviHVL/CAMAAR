@@ -115,15 +115,40 @@ class AdminsController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
+      template = Template.find(template_id)
+
+      formulario = Formulario.create!(
+        titulo: template.nome,
+        so_alunos: true
+      )
+
+      template.questao_templates.each do |q_template|
+        q_form = QuestaoFormulario.create!(
+          formulario: formulario,
+          texto_questao: q_template.texto_questao,
+          tipo_resposta: q_template.tipo_resposta
+        )
+
+        q_template.opcao_templates.each do |o_template|
+          OpcaoFormulario.create!(
+            questao_formulario: q_form,
+            texto_opcao: o_template.texto_opcao,
+            numero_opcao: o_template.numero_opcao
+          )
+        end
+      end
+
       turma_ids.each do |tid|
         FormularioTurma.create!(
-          formulario_id: template_id,
-          turma_id: tid,
+          formulario: formulario,
+          turma_id: tid
         )
       end
     end
 
-    redirect_to admin_send_forms_path, notice: "Formulários enviados com sucesso!"
+    redirect_to admin_send_forms_path, notice: "Formulários gerados e enviados com sucesso!"
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to admin_send_forms_path, alert: "Erro ao enviar formulários: #{e.message}"
   end
 
   private

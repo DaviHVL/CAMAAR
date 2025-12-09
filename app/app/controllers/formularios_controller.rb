@@ -23,7 +23,7 @@ class FormulariosController < ApplicationController
         questao_formulario: questao
       )
 
-      if questao.tipo_resposta == 'multipla_escolha'
+      if questao.tipo_resposta == 'Radio'
         nova_resposta.opcao_formulario_id = valor_resposta
       else
         nova_resposta.resposta = valor_resposta
