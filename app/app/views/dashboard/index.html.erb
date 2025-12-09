@@ -4,30 +4,28 @@
     <% if @turmas.any? %>
       <% @turmas.each do |turma| %>
         
-        <% formulario = turma.formularios.first %>
+        <%# CORREÇÃO: Iterar sobre TODOS os formulários da turma, não apenas o first %>
+        <% turma.formularios.each do |formulario| %>
         
-        <%# --- LÓGICA DE FILTRAGEM (ALTERADA) --- %>
-        
-        <%# 1. Se a turma NÃO tem formulário criado pelo admin, pula e não mostra nada. %>
-        <% next unless formulario %>
+          <%# 1. Se o aluno JÁ respondeu este formulário específico, pula ele. %>
+          <% next if @ids_respondidos.include?(formulario.id) %>
+          
+          <%# 2. Renderiza o Card para ESTE formulário %>
+          <%= render(EvaluationCardComponent.new(
+                turma: turma.num_turma,
+                materia: turma.materia.nome,
+                professor: turma.professor, # Certifique-se que o método professor existe em Turma
+                semestre: turma.semestre,
+                formulario_id: formulario.id,
+                turma_id: turma.id
+              )) %>
+              
+        <% end %> <%# Fim do loop de formulários %>
 
-        <%# 2. Se o aluno JÁ respondeu este formulário, pula também. %>
-        <% next if @ids_respondidos.include?(formulario.id) %>
-        
-        <%# ------------------------------------- %>
-        
-        <%= render(EvaluationCardComponent.new(
-              turma: turma.num_turma,
-              materia: turma.materia.nome,
-              professor: turma.professor,
-              semestre: turma.semestre,
-              formulario_id: formulario.id,
-              turma_id: turma.id
-            )) %>
-            
-      <% end %>
+      <% end %> <%# Fim do loop de turmas %>
     <% else %>
-      <% end %>
+      <p class="text-gray-500">Nenhuma turma encontrada.</p>
+    <% end %>
 
   </div>
 </div>
