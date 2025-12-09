@@ -12,7 +12,6 @@ class AdminsController < ApplicationController
   def import_form
   end
 
-  # ADICIONADO: O método que processa o upload
   def importar
     arquivo_turmas = params[:arquivo_turmas]
     arquivo_membros = params[:arquivo_membros]
@@ -31,7 +30,6 @@ class AdminsController < ApplicationController
     end
   end
 
-  # --- Funcionalidade de Enviar Formulários ---
   def send_forms
     @turmas = Turma.all
 
@@ -39,7 +37,6 @@ class AdminsController < ApplicationController
                           .order(:nome)
   end
 
-  # --- Funcionalidade de Templates (Manual) ---
   def edit_templates
     @templates = Template.all.order(created_at: :desc)
   end
@@ -65,9 +62,6 @@ class AdminsController < ApplicationController
 
 
   def destroy_template
-    # @template já foi carregado por set_template, mas a lógica de verificação
-    # de permissão DEVE estar no set_template, ou você corre o risco de tentar
-    # rodar o destroy em um objeto que você não deveria ter acessado.
     
     template_name = @template.nome # Salva o nome para a mensagem de feedback
     @template.destroy
@@ -106,78 +100,68 @@ class AdminsController < ApplicationController
 
 
   def process_send_forms
-    template_id = params[:template_id]
+    template = Template.find(params[:template_id])
     turma_ids = params[:turma_ids]
 
-    if template_id.blank? || turma_ids.blank?
+    if template.blank? || turma_ids.blank?
       redirect_to admin_send_forms_path, alert: "Selecione um template e pelo menos uma turma."
       return
     end
 
     ActiveRecord::Base.transaction do
-      template = Template.find(template_id)
-
-      formulario = Formulario.create!(
-        titulo: template.nome,
-        so_alunos: true
-      )
-
-      template.questao_templates.each do |q_template|
-        q_form = QuestaoFormulario.create!(
-          formulario: formulario,
-          texto_questao: q_template.texto_questao,
-          tipo_resposta: q_template.tipo_resposta
+      turma_ids.each do |tid|
+        novo_formulario = Formulario.create!(
+          titulo: template.nome,
+          so_alunos: true 
         )
 
-        q_template.opcao_templates.each do |o_template|
-          OpcaoFormulario.create!(
-            questao_formulario: q_form,
-            texto_opcao: o_template.texto_opcao,
-            numero_opcao: o_template.numero_opcao
-          )
-        end
-      end
-
-      turma_ids.each do |tid|
         FormularioTurma.create!(
-          formulario: formulario,
+          formulario: novo_formulario,
           turma_id: tid
         )
+
+        template.questao_templates.each do |q_template|
+          nova_questao = QuestaoFormulario.create!(
+            formulario: novo_formulario,
+            texto_questao: q_template.texto_questao,
+            tipo_resposta: q_template.tipo_resposta
+          )
+
+          q_template.opcao_templates.each do |o_template|
+            OpcaoFormulario.create!(
+              questao_formulario: nova_questao,
+              texto_opcao: o_template.texto_opcao,
+              numero_opcao: o_template.numero_opcao
+            )
+          end
+        end
       end
     end
 
-    redirect_to admin_send_forms_path, notice: "Formulários gerados e enviados com sucesso!"
-  rescue ActiveRecord::RecordInvalid => e
-    redirect_to admin_send_forms_path, alert: "Erro ao enviar formulários: #{e.message}"
+    redirect_to admin_send_forms_path, notice: "Formulários enviados com sucesso! Cada turma recebeu uma cópia individual."
   end
 
   private
 
-  # Método forte para permitir apenas os parâmetros esperados
   def template_params
-    # Permite o nome do template, e então, permite a lista de atributos de QuestaoTemplate
     params.require(:template).permit(
       :nome,
-      # Nome da associação no plural snake_case: questao_templates
       questao_templates_attributes: [
         :id, 
         :texto_questao, 
         :tipo_resposta, 
-        :_destroy, # Para remover questões existentes
-        # Permite a lista de atributos de OpcaoTemplate
+        :_destroy, 
         opcao_templates_attributes: [
           :id, 
           :texto_opcao, 
           :numero_opcao, 
-          :_destroy # Para remover opções existentes
+          :_destroy 
         ]
       ]
     )
   end
 
-  # Carrega o template e verifica a permissão
   def set_template
-    # carrega template com questoes e opcoes em uma só query
     @template = Template.includes(questao_templates: :opcao_templates).find(params[:id])
 
     unless @template.usuario_id == current_user.id
