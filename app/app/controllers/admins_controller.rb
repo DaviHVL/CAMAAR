@@ -33,11 +33,10 @@ class AdminsController < ApplicationController
 
   # --- Funcionalidade de Enviar Formulários ---
   def send_forms
-    # Lógica para carregar dados (formulários, templates)
-    @forms_to_send = [ 
-      { name: "Estudos Em", semester: "2024.1", code: "CIC1024", checked: true }, 
-      # ...
-    ]
+    @turmas = Turma.all
+
+    @templates = Template.where(usuario_id: current_user.id)
+                          .order(:nome)
   end
 
   # --- Funcionalidade de Templates (Manual) ---
@@ -52,46 +51,16 @@ class AdminsController < ApplicationController
     questao.opcao_templates.build
   end
 
-
-    # app/controllers/admins_controller.rb
-
   def create_template
+    @template = Template.new(template_params)
+    @template.usuario = current_user 
 
-    attrs = params.require(:template).permit(
-      :nome,
-      questao_templates_attributes: [
-        :tipo,
-        :texto,
-        options_attributes: [:texto]
-      ]
-    )
-
-    template = Template.create!(
-      nome: attrs[:nome],
-      usuario_id: current_user.id
-    )
-
-    if attrs[:questao_templates_attributes]
-      attrs[:questao_templates_attributes].each do |_, q|
-        questao = QuestaoTemplate.create!(
-          template_id: template.id,
-          tipo_resposta: q[:tipo],       # renomeando automaticamente
-          texto_questao: q[:texto]
-        )
-
-        if q[:options_attributes]
-          q[:options_attributes].each do |idx, op|
-            OpcaoTemplate.create!(
-              questao_template_id: questao.id,
-              texto_opcao: op[:texto],
-              numero_opcao: idx.to_i + 1
-            )
-          end
-        end
-      end
+    if @template.save 
+      redirect_to admin_edit_templates_path, notice: "Template criado com sucesso!"
+    else
+    flash.now[:alert] = "Erro ao criar template. Verifique os campos."
+    render :new_template, status: :unprocessable_entity 
     end
-    redirect_to admin_edit_templates_path, notice: "Template criado com sucesso!"
-
   end
 
 
@@ -107,13 +76,11 @@ class AdminsController < ApplicationController
   end
 
   def edit_template
-    # @template já vem do set_template (com questao_templates e opcao_templates carregados)
-    Rails.logger.info "EDIT_TEMPLATE: template id=#{@template.id} - questoes_count=#{@template.questao_templates.size}"
-    @template.questao_templates.each do |q|
-      Rails.logger.info "  questao id=#{q.id} texto='#{q.texto_questao}' options_count=#{q.opcao_templates.size}"
+    if @template.questao_templates.empty?
+      @template.questao_templates.build
     end
 
-    render 'update_template'
+    render 'update_template' 
   end
 
   def update_template
@@ -135,6 +102,28 @@ class AdminsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+
+  def process_send_forms
+    template_id = params[:template_id]
+    turma_ids = params[:turma_ids]
+
+    if template_id.blank? || turma_ids.blank?
+      redirect_to admin_send_forms_path, alert: "Selecione um template e pelo menos uma turma."
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      turma_ids.each do |tid|
+        FormularioTurma.create!(
+          formulario_id: template_id,
+          turma_id: tid,
+        )
+      end
+    end
+
+    redirect_to admin_send_forms_path, notice: "Formulários enviados com sucesso!"
   end
 
   private

@@ -13,7 +13,9 @@ Rails.application.routes.draw do
   get 'admin/importar', to: 'admins#import_form', as: 'admin_importar_form'
   post 'admin/importar', to: 'admins#importar'
 
-  get 'admin/send_forms', to: 'admins#send_forms', as: 'admin_send_forms'
+  get  'admin/send_forms', to: 'admins#send_forms',  as: 'admin_send_forms'
+  post 'admin/send_forms', to: 'admins#process_send_forms', as: 'admin_process_send_forms'
+
 
   get 'admin/templates', to: 'admins#edit_templates', as: 'admin_edit_templates'
   get 'admin/templates/new', to: 'admins#new_template', as: 'admin_new_template'
