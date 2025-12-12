@@ -15,7 +15,7 @@ RSpec.describe "Criação de Template (Admin)", type: :system do
     click_button "Entrar"
 
     # ir à página de criação de template
-    visit admin_new_template_path
+    visit new_template_path
 
     # preencher o nome do template (campo name: template[nome])
     fill_in "template[nome]", with: "Template de Teste"

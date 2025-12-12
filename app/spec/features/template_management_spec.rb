@@ -9,7 +9,7 @@ RSpec.describe "Gerenciamento de Templates (exclusão)", type: :request do
     post login_path, params: { email: owner.email, password: 'pass123' }
     expect(session[:user_id]).to eq(owner.id)
 
-    delete admin_template_delete_path(template)
+    delete template_path(template)
     expect(response).to redirect_to(admin_edit_templates_path)
 
     follow_redirect!
@@ -26,7 +26,7 @@ RSpec.describe "Gerenciamento de Templates (exclusão)", type: :request do
     post login_path, params: { email: other.email, password: 'pass123' }
     expect(session[:user_id]).to eq(other.id)
 
-    delete admin_template_delete_path(template)
+    delete template_path(template)
     expect(response).to redirect_to(admin_edit_templates_path)
 
     follow_redirect!
