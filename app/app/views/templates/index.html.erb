@@ -24,14 +24,14 @@
             <div class="flex space-x-2 text-gray-500">
               
               <%# Botão de EDIÇÃO (Lápis): GET para o formulário de edição %>
-              <%= link_to admin_edit_template_form_path(template), 
+              <%= link_to edit_template_path(template), 
                           title: "Editar", 
                           class: "cursor-pointer hover:text-purple-600" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
               <% end %>
               
               <%# Botão de EXCLUSÃO (Lixeira): DELETE para a action destroy_template %>
-              <%= link_to admin_template_delete_path(template), 
+              <%= link_to template_path(template), 
                           data: { 
                             turbo_method: :delete, 
                             turbo_confirm: "Tem certeza que deseja excluir o template '#{template.nome}'?" 
@@ -48,7 +48,7 @@
       
       <%# Botão para CRIAR Novo Template %>
       <div class="bg-gray-50 p-4 rounded-lg border border-gray-300 flex items-center justify-center h-32 cursor-pointer hover:bg-gray-100 hover:shadow-md transition duration-200">
-        <%= link_to admin_new_template_path, class: "w-full h-full flex items-center justify-center" do %>
+        <%= link_to new_template_path, class: "w-full h-full flex items-center justify-center" do %>
           <span class="text-5xl font-light text-gray-400">+</span>
         <% end %>
       </div>
