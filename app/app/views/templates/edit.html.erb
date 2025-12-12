@@ -1,7 +1,7 @@
 <div class="min-h-full flex items-center justify-center p-4 bg-gray-100">
   
   <%# O Rails inferirá o método PATCH e a URL com o ID, e carregará os dados %>
-  <%= form_with(model: @template,url: admin_template_update_path(@template),method: :patch,local: true,html: { class: "template-form-container w-full max-w-xl" }) do |form| %>
+  <%= form_with(model: @template,url: template_path(@template),method: :patch,local: true,html: { class: "template-form-container w-full max-w-xl" }) do |form| %>
   
     <div class="bg-white rounded-lg shadow-xl w-full">
       

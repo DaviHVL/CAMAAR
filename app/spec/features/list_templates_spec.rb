@@ -26,6 +26,6 @@ RSpec.describe "Listagem de Templates (Admin)", type: :system do
     expect(page).to have_content("Template B")
 
     # botão para criar novo template
-    expect(page).to have_link(nil, href: admin_new_template_path)
+    expect(page).to have_link(nil, href: new_template_path)
   end
 end
