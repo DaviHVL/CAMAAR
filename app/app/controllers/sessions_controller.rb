@@ -1,11 +1,12 @@
+# Gerencia o ciclo de vida da autenticação do usuário (Login e Logout).
+# Responsável por criar e destruir a sessão do usuário no navegador.
 class SessionsController < ApplicationController
-  def new
-    
-  end
+  def new; end
 
   def create
     user = Usuario.find_by(email: params[:email])
-    if user && user.authenticate(params[:password])
+
+    if user&.authenticate(params[:password])
       session[:user_id] = user.id
       redirect_to root_path, notice: 'Logado com sucesso!'
     else
