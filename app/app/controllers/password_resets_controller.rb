@@ -9,7 +9,7 @@ class PasswordResetsController < ApplicationController
     user = Usuario.find_by(email: params[:email])
     
     if user
-      user.send_password_reset_email! 
+      user.send_password_reset_email 
       redirect_to login_path, notice: "Email enviado com instruções!"
     else
       flash.now[:alert] = "Email não encontrado"
@@ -21,7 +21,7 @@ class PasswordResetsController < ApplicationController
 
   def update
     if @user.update(user_params)
-      @user.clear_reset_digest!
+      @user.clear_reset_digest
       redirect_to login_path, notice: "Senha redefinida com sucesso! Faça login."
     else
       render :edit, status: :unprocessable_entity
