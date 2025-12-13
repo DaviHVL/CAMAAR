@@ -74,6 +74,29 @@ Com essas refatorações, foram obtidos os seguintes resultados:
 Entre as principais melhorias, destacam-se o aumento do **score** para **97.35%** e a passagem de todos arquivos para a **classe A**.
 
 ### 4.2. Complexidade Ciclomática
+Para a avaliação da complexidade ciclomática dos métodos do projeto, foi utilizada a ferramenta **Saikuro**, conforme recomendado na especificação da atividade. O Saikuro é uma ferramenta de análise estática para código Ruby que calcula a complexidade ciclomática de cada método a partir da contagem de pontos de decisão no fluxo de controle.
+
+Devido a limitações de compatibilidade da ferramenta com versões mais recentes da linguagem Ruby, foi necessário **reduzir temporariamente a versão do Ruby para 2.6.10**, versão que apresenta maior estabilidade e compatibilidade com o Saikuro. Essa alteração foi realizada apenas em nível local, sem impactar a configuração original do projeto ou o ambiente de desenvolvimento principal.
+
+A análise foi aplicada exclusivamente aos arquivos responsáveis pela lógica da aplicação, concentrados nos diretórios:
+
+- `app/controllers`
+- `app/models`
+- `app/services`
+- `app/helpers`
+
+Os relatórios gerados pela ferramenta foram organizados no diretório:
+
+```
+tmp/saikuro_report
+```
+
+Nesse diretório encontram-se tanto os relatórios agregados quanto os arquivos HTML individuais gerados para cada arquivo Ruby analisado, permitindo uma inspeção detalhada da complexidade de cada método.
+
+Após a execução da análise, **não foram identificados métodos com complexidade ciclomática maior ou igual a 10**, indicando que todos os métodos avaliados estão em conformidade com o critério estabelecido para o projeto. Dessa forma, não foi necessária a refatoração de métodos com base nesse indicador.
+
+A imagem a seguir demonstra isso:
+![Imagem do Relatório de Complexidade Ciclomática](img/cyclomatic_complexity_report.png)
 
 ## 5. Relatório de Cobertura de Testes
 
