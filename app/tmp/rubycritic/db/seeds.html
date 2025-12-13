@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ruby Critic - Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- StyleSheets -->
+    <link href="../assets/vendor/stylesheets/bootstrap.min.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <link href="../assets/vendor/stylesheets/font-awesome.min.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <link href="../assets/vendor/stylesheets/prettify.custom_theme.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <link href="../assets/stylesheets/application.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+  </head>
+
+  <body>
+    <header class="navbar navbar-default navbar-fixed-top">
+      <a href="#menu-toggle" class="btn btn-default hidden-lg visible-sm-* hidden-md visible-xs-* pull-left" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a>
+      <a href="../overview.html"><img src="../assets/images/logo.png" alt="Ruby Critic Logo" title="Ruby Critic Logo" width="55"><span class="logo">RUBYCRITIC</span></a>
+      
+    </header>
+    <div id="wrapper">
+      <!-- Sidebar -->
+      <aside id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-item">
+            <a href="../overview.html" class="project-nav-item overview-nav"><i class="fa fa-dashboard"></i>Overview</a>
+          </li>
+          <li class="sidebar-item">
+            <a href="../code_index.html" class="project-nav-item code-index-nav"><i class="fa fa-code"></i>Code</a>
+          </li>
+          <li class="sidebar-item">
+            <a href="../smells_index.html" class="project-nav-item smells-index-nav"><i class="fa fa-warning"></i>Smells</a>
+          </li>
+          <li class="sidebar-item">
+            <a href="../simple_cov_index.html" class="project-nav-item coverage-index-nav"><i class="fa fa-umbrella"></i>Coverage</a>
+          </li>
+        </ul>
+      </aside>
+      <!-- /#sidebar-wrapper -->
+      <div id="page-content-wrapper">
+        <div class="container-fluid">
+          <div class="row">
+  <!--Page Title -->
+  <div class="Page_Title">
+    <div class="file-time">
+      <span class="committed-at">
+        
+          Updated <time class='js-timeago' datetime='2025-12-07 23:29:41 -0300'>2025-12-07 23:29:41 -0300</time>
+        
+      </span>
+    </div>
+    <div>
+      <h3><small>db /</small> seeds.rb</h3>
+    </div>
+  </div>
+  <!--End Page Title -->
+  <div class="Content_Wrapper">
+    <!-- code detail -->
+    <div class="code-top-detail clearfix row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-1">
+            <div class="rating a big">
+              A
+            </div>
+          </div>
+          <div class="code-statistics col-md-11">
+            <div class="col-md-3">
+              <div><span class="metric">139</span><small> lines of codes</small></div>
+              <div><span class="metric">0</span><small> methods</small></div>
+            </div>
+            <div class="col-md-3">
+              <div><span class="metric">N/A</span><small> complexity/method</small></div>
+              <div><span class="metric">3</span><small> churn</small></div>
+            </div>
+            <div class="col-md-3">
+              <div><span class="metric">0.0</span><small> complexity</small></div>
+              <div><span class="metric">0</span><small> duplications</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="code-tabs">
+          <ul class="nav nav-pills right-to-left">
+            <li><a href="#" id="toggle-code" class="toggle-button button">code</a></li>
+            <li class="active">
+              <a href="#" id="toggle-smells" class="toggle-button button">
+                0
+                smell
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <code class="prettyprint linenums lang-ruby file-code js-file-code"># db/seeds.rb
+
+puts &quot;🌱 Iniciando o seed do banco de dados...&quot;
+
+# 1. Limpar dados existentes (na ordem reversa para não quebrar FKs)
+puts &quot;🧹 Limpando tabelas antigas...&quot;
+QuestaoRespondida.destroy_all
+FormularioRespondido.destroy_all
+OpcaoFormulario.destroy_all
+QuestaoFormulario.destroy_all
+FormularioTurma.destroy_all
+Formulario.destroy_all
+OpcaoTemplate.destroy_all
+QuestaoTemplate.destroy_all
+Template.destroy_all
+UsuarioTurma.destroy_all
+Turma.destroy_all
+Materia.destroy_all
+Departamento.destroy_all
+Usuario.destroy_all
+
+# 2. Criar Usuários
+puts &quot;👤 Criando usuários...&quot;
+
+# Admin
+admin = Usuario.create!(
+  nome: &quot;Administrador Geral&quot;,
+  email: &quot;admin@unb.br&quot;,
+  matricula: &quot;000001&quot;,
+  password: &quot;123&quot;,
+  password_confirmation: &quot;123&quot;,
+  ocupacao: &quot;admin&quot;,
+  is_admin: true
+)
+
+# Professor
+prof = Usuario.create!(
+  nome: &quot;Prof. Pardal&quot;,
+  email: &quot;pardal@unb.br&quot;,
+  matricula: &quot;000002&quot;,
+  password: &quot;123&quot;,
+  password_confirmation: &quot;123&quot;,
+  ocupacao: &quot;docente&quot;,
+  is_admin: false
+)
+
+# Alunos
+alunos = []
+5.times do |i|
+  alunos &lt;&lt; Usuario.create!(
+    nome: &quot;Aluno #{i + 1}&quot;,
+    email: &quot;aluno#{i + 1}@unb.br&quot;,
+    matricula: &quot;202300#{i + 1}&quot;,
+    password: &quot;123&quot;,
+    password_confirmation: &quot;123&quot;,
+    ocupacao: &quot;discente&quot;,
+    is_admin: false
+  )
+end
+
+# 3. Estrutura Acadêmica
+puts &quot;🏫 Criando estrutura acadêmica...&quot;
+
+dep_cic = Departamento.create!(nome: &quot;Ciência da Computação&quot;)
+dep_mat = Departamento.create!(nome: &quot;Matemática&quot;)
+
+mat_bd = Materia.create!(nome: &quot;Bancos de Dados&quot;, codigo: &quot;CIC0097&quot;, departamento: dep_cic)
+mat_es = Materia.create!(nome: &quot;Engenharia de Software&quot;, codigo: &quot;CIC0105&quot;, departamento: dep_cic)
+mat_calc = Materia.create!(nome: &quot;Cálculo 1&quot;, codigo: &quot;MAT001&quot;, departamento: dep_mat)
+
+turma_bd = Turma.create!(num_turma: &quot;TA&quot;, semestre: &quot;2024.1&quot;, materia: mat_bd)
+turma_es = Turma.create!(num_turma: &quot;TB&quot;, semestre: &quot;2024.1&quot;, materia: mat_es)
+
+# 4. Matrículas (Vínculos)
+puts &quot;🔗 Vinculando usuários às turmas...&quot;
+
+# Professor nas duas turmas
+UsuarioTurma.create!(usuario: prof, turma: turma_bd)
+UsuarioTurma.create!(usuario: prof, turma: turma_es)
+
+# Alunos nas turmas
+alunos.each_with_index do |aluno, index|
+  UsuarioTurma.create!(usuario: aluno, turma: turma_bd)
+  # Matricula em ES apenas se o índice for par (para variar)
+  UsuarioTurma.create!(usuario: aluno, turma: turma_es) if index.even? 
+end
+
+# 5. Templates e Formulários
+puts &quot;📝 Criando templates e formulários...&quot;
+
+# Template
+template = Template.create!(nome: &quot;Avaliação Padrão CIC&quot;, usuario: admin)
+
+# Questão de Texto no Template
+q1_temp = QuestaoTemplate.create!(
+  texto_questao: &quot;O que você achou da didática do professor?&quot;,
+  tipo_resposta: &quot;texto&quot;,
+  template: template
+)
+
+# Questão de Múltipla Escolha no Template
+q2_temp = QuestaoTemplate.create!(
+  texto_questao: &quot;Como você avalia a infraestrutura da sala?&quot;,
+  tipo_resposta: &quot;multipla_escolha&quot;,
+  template: template
+)
+OpcaoTemplate.create!(texto_opcao: &quot;Ruim&quot;, numero_opcao: 1, questao_template: q2_temp)
+OpcaoTemplate.create!(texto_opcao: &quot;Regular&quot;, numero_opcao: 2, questao_template: q2_temp)
+OpcaoTemplate.create!(texto_opcao: &quot;Boa&quot;, numero_opcao: 3, questao_template: q2_temp)
+
+# Criar um Formulário Aplicado (Cópia do Template para a Turma de BD)
+# Isso simula o processo de &quot;Aplicar Template&quot;
+form = Formulario.create!(titulo: &quot;Avaliação Final - Bancos de Dados&quot;, so_alunos: true)
+FormularioTurma.create!(formulario: form, turma: turma_bd)
+
+# Copiar questões do template para o formulário
+QuestaoFormulario.create!(
+  texto_questao: q1_temp.texto_questao,
+  tipo_resposta: q1_temp.tipo_resposta,
+  formulario: form
+)
+
+q2_form = QuestaoFormulario.create!(
+  texto_questao: q2_temp.texto_questao,
+  tipo_resposta: q2_temp.tipo_resposta,
+  formulario: form
+)
+
+# Copiar opções da questão múltipla escolha
+OpcaoFormulario.create!(texto_opcao: &quot;Ruim&quot;, numero_opcao: 1, questao_formulario: q2_form)
+OpcaoFormulario.create!(texto_opcao: &quot;Regular&quot;, numero_opcao: 2, questao_formulario: q2_form)
+OpcaoFormulario.create!(texto_opcao: &quot;Boa&quot;, numero_opcao: 3, questao_formulario: q2_form)
+
+puts &quot;✅ Seed concluído com sucesso!&quot;
+puts &quot;--------------------------------------------------&quot;
+puts &quot;Login Admin: admin@unb.br / 123&quot;
+puts &quot;Login Prof:  pardal@unb.br / 123&quot;
+puts &quot;Login Aluno: aluno1@unb.br / 123&quot;
+puts &quot;--------------------------------------------------&quot;
+</code>
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScripts -->
+    <script src="../assets/vendor/javascripts/jquery.min.js"></script>
+    <script src="../assets/vendor/javascripts/jquery.tablesorter.min.js"></script>
+    <script src="../assets/vendor/javascripts/jquery.scrollTo.min.js"></script>
+    <script src="../assets/vendor/javascripts/jquery.timeago.js"></script>
+    <script src="../assets/vendor/javascripts/highcharts.src-4.0.1.js"></script>
+    <script src="../assets/vendor/javascripts/prettify.js"></script>
+    <script src="../assets/vendor/javascripts/bootstrap.min.js"></script>
+    <script src="../assets/javascripts/application.js"></script>
+    <script src="../assets/vendor/javascripts/jquery.filtertable.min.js"></script>
+  </body>
+</html>
