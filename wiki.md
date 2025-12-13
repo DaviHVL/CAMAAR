@@ -3,7 +3,7 @@
 ## 1. Informações Gerais
 
 ### Resumo
-A aplicação **CAMAAR** consiste em um sistema desenvolvido com o framework *Ruby on Rails* para fins acadêmicos. Essa aplicação facilita a gestão, coleta e análise de formulários de avaliação acerca de disciplinas ofertadas pela Universidade de Brasília (UnB), que podem ser respondidos tanto por alunos quanto por professores
+Nesta terceira sprint, o foco do desenvolvimento mudou da implementação de funcionalidades para a **refatoração e documentação do código**, seguindo as diretrizes de qualidade de software do Capítulo 9 do livro *Engineering Software as a Service*. O objetivo foi melhorar a manutenibilidade, legibilidade e cobertura de testes do sistema CAMAAR.
 
 ### Integrantes
 
@@ -18,88 +18,75 @@ A aplicação **CAMAAR** consiste em um sistema desenvolvido com o framework *Ru
 **Product Owner (PO):** Davi Henrique Vieira Lima  
 **Scrum Master (SM):** Lucca Schoen de Almeida
 
-## 3. Funcionalidades Desenvolvidas (Histórias de Usuário)
+## 3. Metas Técnicas e Qualidade de Código
 
-As funcionalidades desenvolvidas foram estabelecidas com base nas histórias de usuário apresentadas nas issues. Desse modo, a seguir temos as funcionalidades com suas respectivas pontuações e regras de negócio:
+Diferente das sprints anteriores, esta etapa não focou em Histórias de Usuário novas, mas sim em critérios técnicos de aceitação para o código existente. As metas definidas foram:
 
-| Issue | Funcionalidade | Descrição / Regras de Negócio (Resumo) | Responsável | Pontos |
-|:---:|---|---|---|:---:|
-| **098** | Importar dados do SIGAA | Deve ler CSV/JSON do SIGAA e popular o banco. Validar duplicidade. | Lucca | 5 |
-| **099** | Responder formulário | Permitir que usuário logado envie respostas. | Caio | 3 |
-| **100** | Cadastrar usuários do sistema | CRUD de usuários. Deve exigir email válido. | Davi | 3 |
-| **101** | Gerar relatório do administrador | Compilar dados de avaliações em formato visual/exportável para o Admin. | Davi | 5 |
-| **102** | Criar template de formulário | Permitir criação de perguntas para avaliações. | Caio | 8 |
-| **103** | Criar formulário de avaliação | Instanciar um formulário a partir de um template para uma disciplina. | Lucca | 5 |
-| **104** | Sistema de login | Autenticação via email/senha. Bloquear acesso sem login. | Davi | 5 |
-| **105** | Sistema de definição de senha | Fluxo de criação ou recuperação de senha segura. | Caio | 3 |
-| **108** | Atualizar base com dados do SIGAA | Sincronização de dados existentes. Não deve sobrescrever dados manuais. | Lucca | 3 |
-| **109** | Visualização de forms (Responder) | Listagem de formulários pendentes disponíveis para o usuário atual. | Davi | 3 |
-| **110** | Visualização de resultados | Exibição gráfica ou tabular das respostas coletadas (apenas Admin/Prof). | Caio | 5 |
-| **111** | Visualização dos templates criados | Listagem de todos os templates com opções de gestão. | Davi | 2 |
-| **112** | Edição e deleção de templates | Alterar perguntas de templates. A deleção não deve alterar formulários já instanciados. | Lucca | 5 |
+### 3.1. Métricas de Complexidade
+O código foi refatorado para atender aos seguintes limites de complexidade:
+* **Complexidade Ciclomática (Saikuro):** < 10 por método.
+* **ABC Score (RubyCritic):** < 20 por método.
 
-## 4. Política de Branching
+### 3.2. Cobertura de Testes
+A cobertura de testes foi ampliada utilizando RSpec e SimpleCov.
+* **Meta:** > 90% de cobertura para todos os Controllers e Models implementados.
 
-Para garantir a rastreabilidade do código e a organização durante os ciclos de desenvolvimento, estabelecemos as seguintes diretrizes técnicas para commits, nomeação de branches e fluxo de trabalho.
+### 3.3. Testes de Aceitação (Cucumber/RSpec)
+* **Requisito:** Implementação de cenários de *Happy Path* e *Sad Path* para todas as features.
+* **Manutenção:** As features existentes foram mantidas para garantir que a refatoração não quebrasse funcionalidades.
 
-## 4.1. Convenções de Commits
-Tanto as mensagens de commit quanto os nomes das branches compartilham os seguintes prefixos:
-* `feat`: Para novas funcionalidades.
+### 3.4. Documentação (RDoc)
+Todos os métodos foram documentados seguindo o padrão RDoc, contendo:
+* Descrição do método.
+* Argumentos recebidos.
+* Valores de retorno.
+* Efeitos colaterais.
 
-* `fix`: Para correção de bugs.
+## 4. Relatório de Refatoração
 
-* `refactor`: Para refatoração de código
+### 4.1. ABC Score
+Antes das refatorações relativas ao ABC Score, os resultados gráficos do *Ruby Critic* são demonstrados a seguir:
 
-* `test`: Para criação ou alteração de testes
+![Gráfico 1 do RubyCritic antes da refatoração](img/before_refactor_abc_1.png)
 
-* `docs`: Para documentação
+![Gráfico 2 do RubyCritic antes da refatoração](img/before_refactor_abc_2.png)
 
-Os commits devem ser atômicos e descritivos, seguindo o formato:
+Entre as principais informações, pode-se observar que o score geral do projeto estava em **95,98%** e dois arquivos estavam **fora da classe A**.
 
-    `{prefixo}: {mensagem com verbo na 3ª pessoa do presente}`
 
-As branches devem ser nomeadas em **kebab-case**, sempre categorizadas pelo prefixo da tarefa:
+A partir disso, abaixo apresentamos as principais refatorações realizadas, com base no ABC Score (RubyCritic),  para adequar o código às métricas exigidas.
 
-    `{prefixo}/{nome-da-branch}`
+| Arquivo | Métrica (Antes) | Métrica (Depois) | Técnica de Refatoração Utilizada |
+| :--- | :---: | :---: | :--- |
+| `app/controllers/admins_controller.rb` |  126.84 |  48.52 | **Extract Class** (Criação do `TemplatesController`) e **Extract Service Object** (Criação do `FormDistributionService` para a lógica de envio). |
+| `app/controllers/password_resets_controller.rb` |  54.49 |  31.5 | **Move Method** (Movimentação da lógica de validação e envio de e-mail para o model `Usuario`). |
+| `app/models/usuario.rb` |  11.09 |  0.0 | **Extract Concern** (Extração da lógica de redefinição de senha para o módulo `PasswordResetable`, limpando o model principal). |
+| `app/models/formulario.rb` |  37.39 |  2.2 | **Extract Service Object** (Criação do `FormularioExportService` para encapsular a lógica complexa de geração de CSV). |
+| `app/controllers/sessions_controller.rb` |  20.12 |  19.74 | **Syntactic Sugar / Guard Clauses** (Uso do *Safe Navigation Operator* `&`. para simplificar condicionais de autenticação). |
+| `app/controllers/formularios_controller.rb` |  29.27 |  18.79 | **Extract Service Object** (Criação do `FormResponseService` para processar e salvar respostas, retirando a lógica da action responder). |
 
-## 4.2. Estratégia de Branching (Fluxo de Trabalho)
+Com essas refatorações, foram obtidos os seguintes resultados:
 
-Adotamos um modelo híbrido focado em Sprints, garantindo que a branch principal (`main`) permaneça estável. Contendo, assim, as seguintes características:
-- **`main`**: A fonte da verdade e versão estável do projeto
-- **Branch da Sprint** (ex: `sprint-1`, `sprint-2`): Uma branch intermediária, criada a cada ciclo, para inserir os arquivos obrigatórios da entrega. 
-- **Branches de Tarefa** (Features/Fixes): Branches individuais criadas pelos desenvolvedores para modificações específicas
+![Gráfico 1 do RubyCritic depois da refatoração](img/after_refactor_abc_1.png)
 
-Com base nisso, o ciclo de desenvolvimento é dado por:
+![Gráfico 2 do RubyCritic depois da refatoração](img/after_refactor_abc_2.png)
 
-1. **Criação**: Cada membro cria uma branch para sua tarefa específica (ex: `feat/form-creation`), partindo da branch correta (geralmente a branch da Sprint atual ou `main`, conforme o início do ciclo)
+Entre as principais melhorias, destacam-se o aumento do **score** para **97.35%** e a passagem de todos arquivos para a **classe A**.
 
-2. **Desenvolvimento e Merge**: Ao concluir a tarefa, o desenvolvedor não faz o merge direto na `main`. O código deve ser fundido na Branch da Sprint vigente
+### 4.2. Complexidade Ciclomática
 
-3. **Quality Assurance**: Para que o merge seja aceito na branch da Sprint, é obrigatório:
-   - Abrir um Pull Request
-   - Passar nos testes automáticos
-   - Obter a aprovação de pelo menos 1 revisor
+## 5. Relatório de Cobertura de Testes
 
-4. **Finalização**: Apenas ao encerrar a sprint, a "Branch da Sprint" (com todas as features acumuladas e testadas) será fundida via Pull Request na branch `main`
+Os testes foram executados utilizando RSpec e a cobertura medida via SimpleCov.
 
-## 5. Pontuação (Velocity)
+| Componente | Arquivo | Cobertura (%) |
+|:---:|---|:---:|
+| **...** | `...` | ...% |
 
-A equipe atribuiu pontos (Story Points) para cada história de usuário especificada nesta sprint, para o cálculo da métrica velocity.
 
-| História de Usuário (Feature) | Pontos (Story Points) |
-|-------------------------------|----------------------:|
-| Importar dados do SIGAA | 5 |
-| Responder formulário | 3 |
-| Cadastrar usuários do sistema | 3 |
-| Gerar relatório do administrador | 5 |
-| Criar template de formulário | 8 |
-| Criar formulário de avaliação | 5 |
-| Sistema de login | 5 |
-| Sistema de definição de senha | 3 |
-| Atualizar base de dados com os dados do SIGAA | 3 |
-| Visualização de formulários para responder | 3 |
-| Visualização de resultados dos formulários | 5 |
-| Visualização dos templates criados | 2 |
-| Edição e deleção de templates | 5 |
+**Cobertura Geral do Projeto:** ...%
 
-**Velocity Total Planejada (Sprint 1):** 55
+## 6. Documentação
+
+
+## 7. Conclusão
