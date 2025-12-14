@@ -110,6 +110,74 @@ Os testes foram executados utilizando RSpec e a cobertura medida via SimpleCov.
 **Cobertura Geral do Projeto:** ...%
 
 ## 6. Documentação
+Para garantir a manutenibilidade e a clareza do código desenvolvido, utilizamos a ferramenta **RDoc** para gerar a documentação técnica do projeto. O foco foi documentar as classes e métodos de lógica de negócio implementados pelo grupo, incluindo *Controllers*, *Models*, *Services* e *ViewComponents*.
 
+### 6.1. Padrão Adotado
+Seguindo as diretrizes da entrega, todos os métodos criados foram documentados respeitando a seguinte estrutura de comentários:
 
-## 7. Conclusão
+* **Descrição**: Explicação concisa sobre a responsabilidade do método.
+* **Argumentos (Args)**: Listagem dos parâmetros recebidos e seus tipos.
+* **Retorno**: O que o método devolve (objeto, booleano, redirecionamento, etc.).
+* **Efeitos Colaterais**: Alterações de estado, banco de dados, envio de emails ou redirecionamentos de rota.
+
+O exemplo de documentação no código é dado a seguir:
+
+```ruby
+# Cria um novo template associado ao usuário atual.
+#
+# Args:
+#   - template_params (Hash): Parâmetros recebidos do formulário contendo nome e questões.
+#
+# Returns:
+#   - Redireciona para a lista de templates (index) em caso de sucesso.
+#   - Renderiza a view 'new' novamente em caso de erro de validação.
+#
+# Side Effects:
+#   - Cria um novo registro na tabela 'templates' do banco de dados.
+#   - Define mensagens de flash (notice ou alert).
+def create
+  @template = current_user.templates.build(template_params)
+  handle_persistence(@template, :new, "criado")
+end
+```
+
+### 6.2. Cobertura da Documentação
+Realizamos a varredura do código utilizando a flag `--coverage-report` do RDoc para garantir que nenhum método passasse despercebido.
+
+O escopo da documentação abrangeu:
+
+- **Models**: Regras de negócio, validações e Concerns (ex: PasswordResetable)
+- **Controllers**: Actions de CRUD e métodos privados de controle
+- **Services**: Lógicas complexas extraídas (ex: FormResponseService, SigaaService)
+- **Components**: Lógica de exibição visual (Header, Sidebar, Button)
+
+Dessa forma, foi atingido 100% de documentação nos arquivos do escopo do projeto (excluindo arquivos de configuração padrão do Rails e assets).
+
+```ruby
+Files: 54
+Classes: 38 (0 undocumented)
+Modules: 6 (0 undocumented)
+Constants: 0 (0 undocumented)
+Attributes: 0 (0 undocumented)
+Methods: 61 (0 undocumented)
+
+Total: 105 (0 undocumented)
+100.00% documented
+```
+
+### 6.3. Geração da Documentação
+Para gerar ou visualizar a documentação localmente, execute os seguintes comandos na raiz do projeto:
+
+- **Gerar os arquivos HTML**
+```bash
+bundle exec rdoc --output doc --main README.md
+```
+
+- **Verificar a cobertura**
+```bash
+bundle exec rdoc --coverage-report app
+```
+
+- **Visualizar**
+
+Abra o arquivo `doc/index.html` em seu navegador para navegar pela documentação interativa.
