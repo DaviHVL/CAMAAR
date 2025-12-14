@@ -80,3 +80,8 @@ end
 gem "view_component", "~> 4.1"
 
 gem "letter_opener", group: :development
+
+group :development, :test do
+  gem 'rubycritic', require: false
+  gem 'flog', '4.7.0', require: false 
+end

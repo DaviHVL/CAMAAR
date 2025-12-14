@@ -11,4 +11,9 @@ class Template < ApplicationRecord
 
   # Validação do nome do template (coluna na tabela templates é 'nome')
   validates :nome, presence: true
+
+  def build_initial_structure
+    questao = questao_templates.build
+    questao.opcao_templates.build
+  end
 end
