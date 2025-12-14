@@ -79,3 +79,7 @@ group :development, :test do
   gem 'rubycritic', require: false
   gem 'flog', '4.7.0', require: false 
 end
+
+group :development do
+  gem 'rdoc'
+end
