@@ -1,5 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe FormularioRespondido, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it 'instancia corretamente' do
+    expect(FormularioRespondido.new).to be_a(FormularioRespondido)
+  end
 end

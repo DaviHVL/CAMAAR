@@ -1,5 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UsuarioTurma, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it 'instancia corretamente' do
+    expect(UsuarioTurma.new).to be_a(UsuarioTurma)
+  end
 end
