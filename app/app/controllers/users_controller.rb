@@ -1,22 +1,35 @@
-# app/controllers/users_controller.rb
+# Controlador responsável pelo cadastro de novos usuários no sistema (Sign Up).
 class UsersController < ApplicationController
   
+  # Exibe o formulário de cadastro para um novo usuário.
+  #
+  # Args: Nenhum
+  # Retorno: Renderiza a view 'new' com a variável @usuario inicializada.
+  # Efeitos Colaterais: Instancia um objeto Usuario em memória.
   def new
-    # CORREÇÃO 1: Usar @usuario para refletir o nome do Modelo 'Usuario'
     @usuario = Usuario.new 
   end
 
+  # Processa os dados do formulário de cadastro e cria o usuário no banco.
+  # Se bem-sucedido, realiza o login automático do usuário.
+  #
+  # Args:
+  #   - params[:usuario] (Hash): Atributos do usuário (nome, email, senha, etc).
+  # Retorno:
+  #   - Redireciona para root_path (sucesso).
+  #   - Renderiza a view 'new' com status unprocessable_entity (erro).
+  # Efeitos Colaterais:
+  #   - Cria um novo registro na tabela usuarios.
+  #   - Define a sessão do usuário (session[:user_id]).
+  #   - Define mensagens flash (notice/alert).
   def create
-    # CORREÇÃO 2: Usar @usuario ao criar a instância
     @usuario = Usuario.new(user_params) 
     
     if @usuario.save
-      # CORREÇÃO 3: Usar @usuario ao salvar na sessão
       session[:user_id] = @usuario.id
       flash[:notice] = "Cadastro realizado com sucesso!"
       redirect_to root_path 
     else
-      # Se falhar, re-renderiza o formulário :new, usando @usuario
       flash.now[:alert] = "Não foi possível realizar o cadastro."
       render :new, status: :unprocessable_entity 
     end
@@ -24,11 +37,12 @@ class UsersController < ApplicationController
   
   private
   
+  # Filtra os parâmetros permitidos para o cadastro de usuário (Strong Parameters).
+  #
+  # Args: params (ActionController::Parameters)
+  # Retorno: Hash contendo apenas os atributos permitidos para Usuario.
+  # Efeitos Colaterais: Nenhum.
   def user_params
-    # CORREÇÃO 4: O Rails espera que o nome do recurso seja pluralizado e snake_cased
-    # Se o nome do seu modelo é 'Usuario', ele deve vir como 'usuario' no params
-    # Mantenha o params.require(:user) se você não quiser mudar a view.
-    # Mas o mais correto para o modelo 'Usuario' é params.require(:usuario)
     params.require(:usuario).permit(:nome, :email, :matricula, :password, :password_confirmation, :ocupacao) 
   end
 end

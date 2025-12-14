@@ -1,5 +1,18 @@
+# Módulo auxiliar para a exibição de detalhes dos formulários nas views.
+# Responsável por formatação de textos técnicos, definição de estilos visuais (CSS)
+# baseados em estado e verificações de conteúdo do formulário.
 module FormulariosHelper
-  # Formata o tipo de resposta para exibição amigável
+  
+  # Traduz o código técnico do tipo de resposta para um texto legível na interface.
+  # Útil para mostrar ao usuário "Resposta Aberta" ao invés de "texto" ou "text_area".
+  #
+  # Args:
+  #   - tipo (String): O identificador do tipo de resposta (ex: 'texto', 'multipla_escolha').
+  #
+  # Retorno:
+  #   - String: O nome formatado e amigável (Human Readable).
+  #
+  # Efeitos Colaterais: Nenhum.
   def formato_tipo_resposta(tipo)
     case tipo
     when 'texto'
@@ -11,7 +24,17 @@ module FormulariosHelper
     end
   end
 
-  # Retorna uma classe CSS baseada no tipo de resposta
+  # Retorna as classes CSS apropriadas para estilizar o container da pergunta
+  # com base no seu tipo. Permite diferenciação visual (ex: cores diferentes)
+  # entre perguntas de texto e de múltipla escolha.
+  #
+  # Args:
+  #   - tipo (String): O identificador do tipo de resposta.
+  #
+  # Retorno:
+  #   - String: Uma lista de classes CSS (ex: Tailwind 'bg-blue-50 ...').
+  #
+  # Efeitos Colaterais: Nenhum.
   def classe_tipo_resposta(tipo)
     case tipo
     when 'texto'
@@ -23,7 +46,17 @@ module FormulariosHelper
     end
   end
 
-  # Verifica se um formulário tem questões
+  # Verifica se um formulário específico possui perguntas associadas.
+  # Utilizado para exibir mensagens de "Formulário vazio" ou ocultar botões de envio.
+  #
+  # Args:
+  #   - formulario (Formulario): O objeto formulário a ser verificado.
+  #
+  # Retorno:
+  #   - Boolean: true se houver pelo menos uma questão, false caso contrário.
+  #
+  # Efeitos Colaterais:
+  #   - Realiza consulta ao banco de dados (exists?/any?) na associação questao_formularios.
   def formulario_tem_questoes?(formulario)
     formulario.questao_formularios.any?
   end
