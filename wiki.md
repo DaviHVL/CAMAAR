@@ -100,14 +100,67 @@ A imagem a seguir demonstra isso:
 
 ## 5. Relatório de Cobertura de Testes
 
-Os testes foram executados utilizando RSpec e a cobertura medida via SimpleCov.
+Os testes foram executados utilizando RSpec e a cobertura medida via SimpleCov. O projeto demonstrou uma alta confiabilidade, atingindo **100% de cobertura na camada de Models** e mantendo média superior a **90% em Controllers e Services**.
+
+### 5.1. Tabela de Cobertura por Arquivo
+
+Abaixo estão listados os **controllers** e **models**, juntamente a suas respectivas coberturas:
 
 | Componente | Arquivo | Cobertura (%) |
-|:---:|---|:---:|
-| **...** | `...` | ...% |
+| :--- | :--- | ---: |
+| Controller | `app/controllers/admins_controller.rb` | 100.00% |
+| Controller | `app/controllers/application_controller.rb` | 100.00% |
+| Controller | `app/controllers/dashboard_controller.rb` | 100.00% |
+| Controller | `app/controllers/password_resets_controller.rb` | 100.00% |
+| Controller | `app/controllers/passwords_controller.rb` | 100.00% |
+| Controller | `app/controllers/resultados_controller.rb` | 100.00% |
+| Controller | `app/controllers/sessions_controller.rb` | 100.00% |
+| Controller | `app/controllers/users_controller.rb` | 100.00% |
+| Controller | `app/controllers/templates_controller.rb` | 94.59% |
+| Controller | `app/controllers/formularios_controller.rb` | 91.67% |
+| Model | `app/models/concerns/password_resetable.rb` | 100.00% |
+| Model | `app/models/formulario.rb` | 100.00% |
+| Model | `app/models/application_record.rb` | 100.00% |
+| Model | `app/models/departamento.rb` | 100.00% |
+| Model | `app/models/formulario_respondido.rb` | 100.00% |
+| Model | `app/models/formulario_turma.rb` | 100.00% |
+| Model | `app/models/material.rb` | 100.00% |
+| Model | `app/models/opcao_formulario.rb` | 100.00% |
+| Model | `app/models/opcao_template.rb` | 100.00% |
+| Model | `app/models/questao_formulario.rb` | 100.00% |
+| Model | `app/models/questao_respondida.rb` | 100.00% |
+| Model | `app/models/questao_template.rb` | 100.00% |
+| Model | `app/models/template.rb` | 100.00% |
+| Model | `app/models/turma.rb` | 100.00% |
+| Model | `app/models/usuario_turma.rb` | 100.00% |
+| Model | `app/models/usuario.rb` | 100.00% |
 
+**Cobertura Geral do Projeto: 98.32%**
 
-**Cobertura Geral do Projeto:** ...%
+### 5.2. Evidências Gráficas
+
+As imagens abaixo detalham o relatório gerado pelo SimpleCov:
+
+*   **Visão Geral (All Files):**
+    ![Visão Geral da Cobertura](img/test_coverage_1.png)
+
+*   **Detalhe dos Controllers (98.11%):**
+    ![Cobertura de Controllers](img/test_coverage_2.png)
+
+*   **Detalhe dos Models (100.00%):**
+    ![Cobertura de Models](img/test_coverage_3.png)
+
+### 5.3. Execução e Verificação
+
+Para reproduzir estes resultados e visualizar o relatório HTML interativo:
+
+1.  Execute a suíte de testes no terminal:
+    ```bash
+    bundle exec rspec
+    ```
+
+2.  Após a conclusão, abra o arquivo gerado em seu navegador:
+    `coverage/index.html`
 
 ## 6. Documentação
 Para garantir a manutenibilidade e a clareza do código desenvolvido, utilizamos a ferramenta **RDoc** para gerar a documentação técnica do projeto. O foco foi documentar as classes e métodos de lógica de negócio implementados pelo grupo, incluindo *Controllers*, *Models*, *Services* e *ViewComponents*.
