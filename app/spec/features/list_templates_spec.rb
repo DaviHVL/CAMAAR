@@ -19,7 +19,7 @@ RSpec.describe "Listagem de Templates (Admin)", type: :system do
     click_button "Entrar"
 
     # visitar a página de listagem de templates
-    visit admin_edit_templates_path
+    visit templates_path
 
     expect(page).to have_content("Gerenciamento - Templates")
     expect(page).to have_content("Template A")

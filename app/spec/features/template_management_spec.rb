@@ -10,7 +10,7 @@ RSpec.describe "Gerenciamento de Templates (exclusão)", type: :request do
     expect(session[:user_id]).to eq(owner.id)
 
     delete template_path(template)
-    expect(response).to redirect_to(admin_edit_templates_path)
+    expect(response).to redirect_to(templates_path)
 
     follow_redirect!
     expect(response.body).to include("excluído com sucesso")
@@ -27,7 +27,7 @@ RSpec.describe "Gerenciamento de Templates (exclusão)", type: :request do
     expect(session[:user_id]).to eq(other.id)
 
     delete template_path(template)
-    expect(response).to redirect_to(admin_edit_templates_path)
+    expect(response).to redirect_to(templates_path)
 
     follow_redirect!
     expect(response.body).to include("Você não tem permissão para acessar este template")
