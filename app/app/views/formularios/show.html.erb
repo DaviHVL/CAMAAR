@@ -1,0 +1,58 @@
+<turbo-frame id="modal">
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 transition-opacity" aria-hidden="true"></div>
+
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl transform transition-all flex flex-col max-h-[90vh]">
+      
+      <div class="bg-[#5B1A5B] px-6 py-4 rounded-t-lg flex justify-between items-center">
+        <h3 class="text-lg font-medium text-white">
+          <%= @formulario.titulo %>
+        </h3>
+        <%= link_to dashboard_path, class: "text-white hover:text-gray-200" do %>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <% end %>
+      </div>
+
+      <div class="p-6 overflow-y-auto">
+  <%= form_with url: responder_formulario_path(@formulario), method: :post, local: true do |f| %>
+    
+    <%= hidden_field_tag :turma_id, @turma_id %>
+
+    <% @formulario.questao_formularios.each do |questao| %>
+      <div class="mb-6">
+        <label class="block text-gray-700 font-bold mb-2">
+          <%= questao.texto_questao %>
+        </label>
+
+        <%# CORREÇÃO AQUI: Verifique por 'Texto' (Maiúsculo) %>
+        <% if questao.tipo_resposta == 'Texto' %>
+          <%= text_area_tag "respostas[#{questao.id}]", nil, rows: 3, class: "w-full border border-gray-300 rounded p-2 focus:border-purple-500 focus:outline-none" %>
+        
+        <%# CORREÇÃO AQUI: Verifique por 'Radio' %>
+        <% elsif questao.tipo_resposta == 'Radio' %>
+          <div class="space-y-2">
+            <% questao.opcao_formularios.each do |opcao| %>
+              <div class="flex items-center">
+                <%# O valor enviado deve ser o ID da opção %>
+                <%= radio_button_tag "respostas[#{questao.id}]", opcao.id, false, class: "text-purple-600 focus:ring-purple-500" %>
+                <label class="ml-2 text-gray-700">
+                  <%= opcao.texto_opcao %>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="mt-8 flex justify-end gap-3">
+      <%= link_to "Cancelar", dashboard_path, class: "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300" %>
+      <%= f.submit "Enviar Avaliação", class: "px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 font-bold cursor-pointer" %>
+    </div>
+
+  <% end %>
+</div>
+
+    </div>
+  </div>
+</turbo-frame>

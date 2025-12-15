@@ -1,0 +1,9 @@
+<% if @link.present? %>
+  <%= link_to @link, role: "button", class: classes do %>
+    <%= @text %>
+  <% end %>
+<% else %>
+  <button type="<%= @type %>" class="<%= classes %>">
+    <%= @text %>
+  </button>
+<% end %>

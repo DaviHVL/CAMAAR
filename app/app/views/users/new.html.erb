@@ -1,0 +1,87 @@
+<div class="min-h-screen bg-gray-200 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl flex flex-col md:flex-row h-auto overflow-hidden">
+
+    <div class="w-full md:w-[55%] p-12 flex flex-col justify-center">
+
+      <h2 class="text-2xl font-normal text-center text-gray-800 mb-10 tracking-[0.2em]">CADASTRO</h2>
+
+      <% if flash[:alert] %>
+        <div class="bg-red-50 text-red-600 text-sm px-4 py-2 rounded mb-6 text-center border border-red-200">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <%# --- FORMULÁRIO DE CADASTRO --- %>
+      <%= form_with model: @usuario, url: cadastro_path, local: true, class: "space-y-6" do |form| %>
+
+        <%# Campo Nome - REMOVIDAS AS CHAVES {} %>
+        <%= render FormInputComponent.new(
+            label: "Nome Completo",
+            form: form,
+            attribute: :nome,
+            type: :text,
+            placeholder: "Prof. Pardal"
+        ) %>
+
+        <%# Campo Email - REMOVIDAS AS CHAVES {} %>
+        <%= render FormInputComponent.new(
+            label: "Email Institucional",
+            form: form,
+            attribute: :email,
+            type: :email,
+            placeholder: "pardal@unb.br"
+        ) %>
+        
+        <%# Campo Matrícula - REMOVIDAS AS CHAVES {} %>
+        <%= render FormInputComponent.new(
+            label: "Matrícula",
+            form: form,
+            attribute: :matricula,
+            type: :text,
+            placeholder: "000002"
+        ) %>
+
+        <%# Campo Senha - REMOVIDAS AS CHAVES {} %>
+        <%= render FormInputComponent.new(
+            label: "Senha",
+            form: form,
+            attribute: :password,
+            type: :password,
+            placeholder: "Sua senha segura"
+        ) %>
+
+        <%# Campo Confirmação de Senha - REMOVIDAS AS CHAVES {} %>
+        <%= render FormInputComponent.new(
+            label: "Confirme a Senha",
+            form: form,
+            attribute: :password_confirmation,
+            type: :password,
+            placeholder: "Repita a senha"
+        ) %>
+
+        <%# Campo Ocupação (Select/Dropdown) - ESTE JÁ ESTAVA CORRETO %>
+        <div class="field">
+          <%= form.label :ocupacao, "Ocupação", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.select :ocupacao, options_for_select(["docente", "discente"], @usuario.ocupacao), 
+            { include_blank: "Selecione a Ocupação" }, 
+            { class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" } %>
+        </div>
+
+        <div class="pt-2">
+          <%# Botão de Cadastro - REMOVIDAS AS CHAVES {} %>
+          <%= render ButtonComponent.new(
+              text: "Cadastrar",
+              type: :submit,
+              variant: :primary
+          ) %>
+        </div>
+
+      <% end %>
+    </div>
+
+    <div class="hidden md:block md:w-[45%] h-full">
+      <%= render(BrandPanelComponent.new) %>
+    </div>
+
+  </div>
+</div>

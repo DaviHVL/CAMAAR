@@ -1,0 +1,43 @@
+<div class="min-h-full flex items-center justify-center p-4 bg-gray-100">
+  
+  <%= form_with model: @template, url: templates_path, local: true, html: { class: 'template-form-container w-full max-w-xl' } do |form| %>
+  
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-xl">
+      
+      <div class="p-8">
+
+        <%# Erros de validação %>
+        <% if @template.errors.any? %>
+          <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+            <ul>
+              <% @template.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="mb-6 border-b border-gray-200 pb-4">
+          <label class="block text-sm font-medium text-gray-700">Nome do template:</label>
+          <%= form.text_field :nome, required: true, placeholder: "Placeholder", class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1" %>
+        </div>
+
+        <%# AQUI: container vazio onde o JS irá inserir as questões dinâmicas %>
+        <div id="questions-container"></div>
+
+        <%# Botão para adicionar questão (JS usa .js-add-question) %>
+        <div class="mt-6 flex justify-center js-main-add-button-container">
+          <button type="button" class="h-10 w-10 rounded-full bg-purple-600 text-white hover:bg-purple-700 flex items-center justify-center shadow-md js-add-question">
+            <span class="text-2xl font-light">+</span>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="p-4 bg-gray-50 flex justify-center rounded-b-lg">
+        <%= render(ButtonComponent.new(text: "Criar", variant: :success, type: :submit)) %>
+      </div>
+
+    </div>
+  <% end %>
+</div>

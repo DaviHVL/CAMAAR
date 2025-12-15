@@ -1,0 +1,174 @@
+<div class="min-h-full flex items-center justify-center p-4 bg-gray-100">
+  
+  <%# O Rails inferirá o método PATCH e a URL com o ID, e carregará os dados %>
+  <%= form_with(model: @template,url: template_path(@template),method: :patch,local: true,html: { class: "template-form-container w-full max-w-xl" }) do |form| %>
+  
+    <div class="bg-white rounded-lg shadow-xl w-full">
+      
+      <div class="p-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Editar Template: <%= @template.nome %></h1>
+
+        <%# Exibe erros de validação %>
+        <% if @template.errors.any? %>
+          <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+            <ul>
+              <% @template.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="mb-6 border-b border-gray-200 pb-4">
+          <label class="block text-sm font-medium text-gray-700">Nome do template:</label>
+          <%= form.text_field :nome, required: true, placeholder: "Placeholder", class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1" %>
+        </div>
+
+        <div id="questions-container">
+          
+          <%# LOOP PRINCIPAL: fields_for para a associação has_many :questao_templates %>
+          <%# OMITIMOS o segundo parâmetro para iterar sobre TUDO que está em @template.questao_templates %>
+          <%= form.fields_for :questao_templates do |q_form| %>
+            
+            <div class="mb-6 border-b border-gray-200 pb-4 js-question-block">
+              <h2 class="text-xl font-bold text-gray-800 mb-4">Questão Existente</h2>
+              
+              <%# Campo ID (oculto): ESSENCIAL para identificar qual registro está sendo atualizado %>
+              <%= q_form.hidden_field :id %>
+              
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Tipo:</label>
+                  <%# Campo tipo_resposta %>
+                  <%= q_form.select :tipo_resposta, 
+                                    [['Radio', 'Radio'], ['Texto', 'Texto']], 
+                                    { selected: q_form.object.tipo_resposta },
+                                    { class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1 js-type-select" } %>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Texto:</label>
+                  <%# Campo texto_questao %>
+                  <%= q_form.text_field :texto_questao, placeholder: "Texto da Questão", class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1" %>
+                </div>
+              </div>
+              
+              <%# Container de Opções %>
+              <div class="mt-4 js-options-container <%= 'hidden' unless q_form.object.tipo_resposta == 'Radio' %>">
+                <label class="block text-sm font-medium text-gray-700">Opções:</label>
+                <div class="js-options-list">
+                    
+                    <%# CORREÇÃO CRÍTICA: Iterar sobre as opções DENTRO do objeto da Questão %>
+                    <% q_form.fields_for :opcao_templates do |o_form| %>
+                        
+                        <div class="flex items-center space-x-2 mt-1 js-option-item">
+                            <%= o_form.hidden_field :id %>
+                            
+                            <%# Incluindo o campo obrigatório numero_opcao (como hidden) %>
+                            <%= o_form.hidden_field :numero_opcao, value: o_form.object.numero_opcao || 1 %>
+                            
+                            <%# Campo texto_opcao %>
+                            <%= o_form.text_field :texto_opcao, placeholder: "Opção Salva", class: "block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1" %>
+                            
+                            <%# Checkbox _destroy para remover a opção (escondido) %>
+                            <%= o_form.check_box :_destroy, class: 'hidden js-destroy-option-checkbox' %>
+                            
+                            <%# Botão visual para remover a opção (Ativa o checkbox _destroy via JS) %>
+                            <button type="button" class="text-red-500 hover:text-red-700 text-sm js-remove-option-btn">X</button>
+                        </div>
+                        
+                    <% end %> <%# Fim do loop de Opções %>
+                </div>
+              </div>
+              
+              <div class="mt-4 flex justify-center js-add-option-button <%= 'hidden' unless q_form.object.tipo_resposta == 'Radio' %>">
+                <button type="button" class="h-8 w-8 rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400 flex items-center justify-center js-add-option">
+                  <span class="text-xl font-light">+</span>
+                </button>
+              </div>
+
+              <%= q_form.check_box :_destroy, class: 'hidden js-destroy-question-checkbox' %>
+              <div class="mt-2 text-right">
+                <button type="button" class="text-red-500 hover:text-red-700 text-sm js-remove-question">Remover Questão</button>
+              </div>
+
+            </div>
+            
+          <% end %> <%# Fim do loop de Questões %>
+        </div>
+        
+        <div class="mt-6 flex justify-center js-main-add-button-container">
+          <button type="button" class="h-10 w-10 rounded-full bg-purple-600 text-white hover:bg-purple-700 flex items-center justify-center shadow-md js-add-question">
+            <span class="text-2xl font-light">+</span>
+          </button>
+        </div>
+        
+      </div>
+      
+      <div class="p-4 bg-gray-50 flex justify-center rounded-b-lg">
+        <%= render(ButtonComponent.new(text: "Salvar Alterações", variant: :success, type: :submit)) %>
+      </div>
+      
+    </div>
+  <% end %>
+</div>
+
+
+<%# --- TEMPLATES JS: Não precisam de alteração, mas foram incluídos para referência --- %>
+<template id="new-question-template">
+  <%= fields_for :template, @template, child_index: 'NEW_RECORD' do |form_builder| %>
+    <%= form_builder.fields_for :questao_templates, QuestaoTemplate.new, child_index: 'NEW_RECORD' do |q_form| %>
+      
+      <div class="mb-6 border-b border-gray-200 pb-4 js-question-block">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 js-question-title">Questão Nova</h2>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Tipo:</label>
+            <%= q_form.select :tipo_resposta, 
+                                [['Radio', 'Radio'], ['Texto', 'Texto']], 
+                                { selected: 'Radio' },
+                                { class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1 js-type-select" } %>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Texto:</label>
+            <%= q_form.text_field :texto_questao, required: true, placeholder: "Texto da Questão", class: "mt-1 block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1" %>
+          </div>
+        </div>
+        
+        <div class="mt-4 js-options-container">
+          <label class="block text-sm font-medium text-gray-700">Opções:</label>
+          <div class="js-options-list">
+          </div>
+        </div>
+        
+        <div class="mt-4 flex justify-center js-add-option-button">
+          <button type="button" class="h-8 w-8 rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400 flex items-center justify-center js-add-option">
+            <span class="text-xl font-light">+</span>
+          </button>
+        </div>
+
+        <%= q_form.check_box :_destroy, class: 'hidden js-destroy-question-checkbox' %>
+        <div class="mt-2 text-right">
+          <button type="button" class="text-red-500 hover:text-red-700 text-sm js-remove-question">Remover Questão</button>
+        </div>
+
+      </div>
+    <% end %>
+  <% end %>
+</template>
+
+<template id="new-option-template">
+  <div class="flex items-center space-x-2 mt-1 js-option-item">
+    <input type="text" placeholder="Nova Opção" 
+           name="template[questao_templates_attributes][QUESTION_INDEX][opcao_templates_attributes][NEW_OPTION_RECORD][texto_opcao]" 
+           class="block w-full border-b border-gray-300 focus:border-purple-600 focus:outline-none py-1">
+    
+    <input type="hidden" 
+           name="template[questao_templates_attributes][QUESTION_INDEX][opcao_templates_attributes][NEW_OPTION_RECORD][numero_opcao]" value="1">
+    
+    <input type="hidden" 
+           name="template[questao_templates_attributes][QUESTION_INDEX][opcao_templates_attributes][NEW_OPTION_RECORD][_destroy]" value="false" class="js-destroy-option-checkbox">
+
+    <button type="button" class="text-red-500 hover:text-red-700 text-sm js-remove-option-btn">X</button>
+  </div>
+</template>
