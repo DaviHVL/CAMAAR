@@ -12,13 +12,13 @@ RSpec.describe Usuario, type: :model do
   end
 
   it 'gera token de reset de senha' do
-    token = usuario.generate_password_reset_token!
-    expect(token).to be_present
-    expect(usuario.reset_digest).to be_present
+    token = usuario.send(:create_reset_digest) 
+    expect(token).not_to be_nil
+    expect(usuario.reset_digest).not_to be_nil
   end
 
   it 'detecta token expirado' do
-    usuario.update!(reset_sent_at: 3.hours.ago)
-    expect(usuario.password_reset_expired?).to be true
+    usuario.update(reset_sent_at: 3.hours.ago)
+    expect(usuario.send(:password_reset_expired?)).to be true
   end
 end

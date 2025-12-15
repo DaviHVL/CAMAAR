@@ -36,9 +36,10 @@ class PasswordResetsController < ApplicationController
 
   def resolve_user_from_token
     @user = Usuario.find_by(email: params[:email])
-    token = params[:id]
 
-    return if @user&.valid_reset_token?(token)
+    @token = params[:id] 
+
+    return if @user&.valid_reset_token?(@token)
 
     redirect_to new_password_reset_path, alert: "Link inválido ou expirado."
   end
