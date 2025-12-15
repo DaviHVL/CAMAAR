@@ -73,6 +73,11 @@ Com essas refatorações, foram obtidos os seguintes resultados:
 
 Entre as principais melhorias, destacam-se o aumento do **score** para **97.35%** e a passagem de todos arquivos para a **classe A**.
 
+Os relatórios completos gerados pela ferramenta, contendo a análise detalhada de cada "smell" e a pontuação individual por arquivo, encontram-se disponíveis no diretório:
+```
+tmp/rubycritic
+```
+
 ### 4.2. Complexidade Ciclomática
 Para a avaliação da complexidade ciclomática dos métodos do projeto, foi utilizada a ferramenta **Saikuro**, conforme recomendado na especificação da atividade. O Saikuro é uma ferramenta de análise estática para código Ruby que calcula a complexidade ciclomática de cada método a partir da contagem de pontos de decisão no fluxo de controle.
 
@@ -162,10 +167,35 @@ Para reproduzir estes resultados e visualizar o relatório HTML interativo:
 2.  Após a conclusão, abra o arquivo gerado em seu navegador:
     `coverage/index.html`
 
-## 6. Documentação
+## 6. Casos de Teste (Happy Path e Sad Path)
+
+Conforme exigido para a garantia da qualidade, todos os fluxos de teste implementados (RSpec) foram revisados e expandidos para cobrir tanto o caminho feliz quanto os caminhos de exceção.
+
+### 6.1. Manutenção do Cucumber
+Seguindo as diretrizes da sprint, **as features do Cucumber já definidas não foram alteradas**. Isso garantiu que a refatoração do código não quebrasse as funcionalidades de negócio já estabelecidas e validadas anteriormente pelo cliente.
+
+### 6.2. Expansão do RSpec
+Para os testes de unidade e integração (Requests), foram implementados cenários explícitos de sucesso e falha.
+
+**Exemplo de Estratégia Adotada (Autenticação e Senhas):**
+
+* **Happy Path (Caminho Feliz):**
+    * Usuário insere credenciais válidas -> Login realizado com sucesso.
+    * Usuário solicita redefinição de senha com email válido -> Email enviado.
+    * Usuário atualiza senha com confirmação idêntica -> Senha atualizada e redirecionamento.
+
+* **Sad Path (Caminho Triste):**
+    * Usuário insere senha errada -> Acesso negado e mensagem de alerta exibida.
+    * Usuário tenta acessar página restrita sem login -> Redirecionamento para login.
+    * Usuário tenta atualizar senha com confirmação diferente -> Erro de validação e renderização do formulário de edição (status 422 Unprocessable Entity).
+    * Usuário clica em link de redefinição expirado -> Redirecionamento para "Esqueci minha senha" com aviso de expiração.
+
+Essa abordagem garantiu que as refatorações fossem validadas contra regressões em cenários de borda.
+
+## 7. Documentação
 Para garantir a manutenibilidade e a clareza do código desenvolvido, utilizamos a ferramenta **RDoc** para gerar a documentação técnica do projeto. O foco foi documentar as classes e métodos de lógica de negócio implementados pelo grupo, incluindo *Controllers*, *Models*, *Services* e *ViewComponents*.
 
-### 6.1. Padrão Adotado
+### 7.1. Padrão Adotado
 Seguindo as diretrizes da entrega, todos os métodos criados foram documentados respeitando a seguinte estrutura de comentários:
 
 * **Descrição**: Explicação concisa sobre a responsabilidade do método.
@@ -194,7 +224,7 @@ def create
 end
 ```
 
-### 6.2. Cobertura da Documentação
+### 7.2. Cobertura da Documentação
 Realizamos a varredura do código utilizando a flag `--coverage-report` do RDoc para garantir que nenhum método passasse despercebido.
 
 O escopo da documentação abrangeu:
@@ -218,7 +248,7 @@ Total: 105 (0 undocumented)
 100.00% documented
 ```
 
-### 6.3. Geração da Documentação
+### 7.3. Geração da Documentação
 Para gerar ou visualizar a documentação localmente, execute os seguintes comandos na raiz do projeto:
 
 - **Gerar os arquivos HTML**
